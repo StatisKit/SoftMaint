@@ -1,2 +1,2 @@
-**SoftMaint**: A Tool to Ease Software Maintenance
-##################################################
+**SoftMaint**: Tools to Ease Software Maintenance
+#################################################

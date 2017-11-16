@@ -11,7 +11,7 @@ with open('README.rst', 'r') as filehandler:
 
 setup(packages = packages.keys(),
       package_dir = {"" : "src" + os.sep + "py"},
-      name = 'python-softmaint',
+      name = 'SoftMaint',
       version = '1.0.0',
       author = 'Pierre Fernique',
       author_email = 'pfernique@gmail.com',

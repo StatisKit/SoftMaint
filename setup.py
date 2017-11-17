@@ -11,11 +11,11 @@ with open('README.rst', 'r') as filehandler:
 
 setup(packages = packages.keys(),
       package_dir = {"" : "src" + os.sep + "py"},
-      name = 'SoftMaint',
+      name = 'python-softmaint',
       version = '1.0.0',
       author = 'Pierre Fernique',
       author_email = 'pfernique@gmail.com',
-      description = 'Tools to Ease Software Maintenance',
+      description = 'A Tool to Ease Software Maintenance',
       long_description = '',
       license = 'Apache License 2.0',
       package_data = {package: [ "*.so", "*.dll"] for package in packages},

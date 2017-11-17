@@ -63,8 +63,6 @@ def find_notice(filepath):
         with open(filepath, 'r') as filehandler:
             pattern = re.compile('^' + SETTING['left'] + '.*' + SETTING['right'] + '$')
             start = 0
-            # import pdb
-            # pdb.set_trace()
             line = filehandler.readline()
             while line and not pattern.match(line):
                 start += 1
@@ -74,12 +72,9 @@ def find_notice(filepath):
             else:
                 end = start
                 line = filehandler.readline()
-                while line  and pattern.match(filehandler.readline()):
+                while line and pattern.match(line):
                     end += 1
                     line = filehandler.readline()
-                if not line:
-                    start = 0
-                    end = -1
     return start, end
 
 def generate_notice(filepath, notice):
@@ -114,7 +109,10 @@ def insert_notice(filepath, notice, back_up=False):
                 filehandler.writelines(lines)
         if len(lines) > 0:
             start, end = find_notice(filepath)
-            lines = lines[:start] + generate_notice(filepath, notice) + ["\n"] * bool(lines[end + 1].strip()) + lines[end + 1:]
+            lines = lines[:start] + ["\n"] * bool(start > 0 and lines[start - 1].strip()) \
+                     + generate_notice(filepath, notice) \
+                     + ["\n"] * bool(lines[end + 1].strip()) \
+                     + lines[end + 1:]
         else:
             lines = generate_notice(filepath, notice)
         with open(filepath, "w") as filehandler:

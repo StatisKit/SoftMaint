@@ -1,7 +1,5 @@
-## Copyright [2017] UMR MISTEA INRA                                      ##
-## Copyright [2017] UMR LEPSE INRA                                       ##
-## Copyright [2017] UMR AGAP CIRAD                                       ##
-## Copyright [2017] EPI Virtual Plants Inria                             ##
+## Copyright [2017] UMR MISTEA INRA, UMR LEPSE INRA, UMR AGAP CIRAD,     ##
+##                  EPI Virtual Plants Inria                             ##
 ##                                                                       ##
 ## This file is part of the StatisKit project. More information can be   ##
 ## found at                                                              ##
@@ -23,7 +21,7 @@
 ## permissions and limitations under the License.                        ##
 
 from path import Path
-import os
+import subprocess
 
 def main(dirpath):
     if not isinstance(dirpath, Path):
@@ -36,7 +34,15 @@ def fs(dirpath):
     if not isinstance(dirpath, Path):
         dirpath = Path(dirpath)
     filepaths = list(dirpath.walkfiles())
-    return [filepath for filepath in filepaths if not any(parent.startswith('.') for parent in filepath.relpath(dirpath).splitall()[1:])]
+    return [filepath for filepath in filepaths if not filepath.basename() in ['NOTICE', 'LICENSE'] and not any(parent.startswith('.') for parent in filepath.relpath(dirpath).splitall()[1:])]
 
 def git(dirpath, vcs=None):
-    return [filepath for filepath in fs(dirpath) if os.system('git check-ignore ' + filepath)]
+    return [filepath for filepath in fs(dirpath) if not git_ignore(filepath)]
+
+def git_ignore(filepath):
+    try:
+        subprocess.check_output(['git', 'check-ignore', filepath])
+    except:
+        return False
+    else:
+        return True

@@ -1,7 +1,5 @@
-## Copyright [2017] UMR MISTEA INRA                                      ##
-## Copyright [2017] UMR LEPSE INRA                                       ##
-## Copyright [2017] UMR AGAP CIRAD                                       ##
-## Copyright [2017] EPI Virtual Plants Inria                             ##
+## Copyright [2017] UMR MISTEA INRA, UMR LEPSE INRA, UMR AGAP CIRAD,     ##
+##                  EPI Virtual Plants Inria                             ##
 ##                                                                       ##
 ## This file is part of the StatisKit project. More information can be   ##
 ## found at                                                              ##
@@ -48,6 +46,15 @@ SETTINGS = {ext : SETTING for SETTING in SETTINGS for ext in SETTING['ext']}
 SETTINGS['SConstruct'] = SETTINGS['.py']
 SETTINGS['SConscript'] = SETTINGS['.py']
 
+IGNORE = {".sublime-project",
+          ".json"}
+
+def get_setting(filepath):
+    SETTING = SETTINGS.get(filepath.ext, SETTINGS.get(filepath.basename(), None))
+    if SETTING is None:
+        if filepath.ext not in IGNORE and filepath.basename() not in IGNORE:
+            warnings.warn("No settings found for file '" + filepath + "'")
+    return SETTING
 
 def find_notice(filepath):
     if not isinstance(filepath, Path):
@@ -56,10 +63,8 @@ def find_notice(filepath):
         raise ValueError("'filepath' parameter is not a valid path to a file")
     start = 0
     end = -1
-    SETTING = SETTINGS.get(filepath.ext, SETTINGS.get(filepath.basename(), None))
-    if SETTING is None:
-        warnings.warn("No settings found for file '" + filepath + "'")
-    else:
+    SETTING = get_setting(filepath)
+    if SETTING is not None:
         with open(filepath, 'r') as filehandler:
             pattern = re.compile('^' + SETTING['left'] + '.*' + SETTING['right'] + '$')
             start = 0
@@ -82,14 +87,13 @@ def generate_notice(filepath, notice):
         filepath = Path(filepath)
     if not(filepath.exists() or filepath.isfile()):
         raise ValueError("'filepath' parameter is not a valid path to a file")
-    SETTING = SETTINGS.get(filepath.ext, SETTINGS.get(filepath.basename(), None))
-    if SETTING is None:
-        warnings.warn("No settings found for file '" + filepath + "'")
-        return []
-    else:
+    SETTING = get_setting(filepath)
+    if SETTING is not None:
         lines = notice.splitlines()
         max_width = 0
-        for line in lines:
+        for index, line in enumerate(lines):
+            line = line.rstrip()
+            lines[index] = line
             max_width = max(max_width, len(line))
         return [SETTING["left"] + line + " " * (max_width - len(line)) + SETTING["right"] + "\n" for line in lines]
 
@@ -98,10 +102,8 @@ def insert_notice(filepath, notice, back_up=False):
         filepath = Path(filepath)
     if not(filepath.exists() or filepath.isfile()):
         raise ValueError("'filepath' parameter is not a valid path to a file")
-    SETTING = SETTINGS.get(filepath.ext, SETTINGS.get(filepath.basename(), None))
-    if SETTING is None:
-        warnings.warn("No settings found for file '" + filepath + "'")
-    else:
+    SETTING = get_setting(filepath)
+    if SETTING is not None:
         with open(filepath, "r") as filehandler:
             lines = list(filehandler.readlines())
         if back_up:
@@ -109,11 +111,15 @@ def insert_notice(filepath, notice, back_up=False):
                 filehandler.writelines(lines)
         if len(lines) > 0:
             start, end = find_notice(filepath)
-            lines = lines[:start] + ["\n"] * bool(start > 0 and lines[start - 1].strip()) \
-                     + generate_notice(filepath, notice) \
-                     + ["\n"] * bool(lines[end + 1].strip()) \
-                     + lines[end + 1:]
+            newlines = lines[:start]
+            if start > 0 and lines[start - 1].strip():
+                newlines += ["\n"]
+            newlines += generate_notice(filepath, notice)
+            if end + 1 < len(lines):
+                if lines[end + 1].strip():
+                    newlines += ["\n"]
+                newlines += lines[end + 1:]
         else:
-            lines = generate_notice(filepath, notice)
+            newlines = generate_notice(filepath, notice)
         with open(filepath, "w") as filehandler:
-            filehandler.writelines(lines)
+            filehandler.writelines(newlines)

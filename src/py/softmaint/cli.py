@@ -1,7 +1,5 @@
-## Copyright [2017] UMR MISTEA INRA                                      ##
-## Copyright [2017] UMR LEPSE INRA                                       ##
-## Copyright [2017] UMR AGAP CIRAD                                       ##
-## Copyright [2017] EPI Virtual Plants Inria                             ##
+## Copyright [2017] UMR MISTEA INRA, UMR LEPSE INRA, UMR AGAP CIRAD,     ##
+##                  EPI Virtual Plants Inria                             ##
 ##                                                                       ##
 ## This file is part of the StatisKit project. More information can be   ##
 ## found at                                                              ##

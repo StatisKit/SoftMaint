@@ -1,7 +1,5 @@
-Copyright [2017] UMR MISTEA INRA
-Copyright [2017] UMR LEPSE INRA
-Copyright [2017] UMR AGAP CIRAD
-Copyright [2017] EPI Virtual Plants Inria
+Copyright [2017] UMR MISTEA INRA, UMR LEPSE INRA, UMR AGAP CIRAD, 
+                 EPI Virtual Plants Inria
 
 This file is part of the StatisKit project. More information can be
 found at
@@ -10,7 +8,7 @@ found at
 
 The Apache Software Foundation (ASF) licenses this file to you under
 the Apache License, Version 2.0 (the "License"); you may not use this
-file except in compliance with the License.You should have received a
+file except in compliance with the License.You should have received a    
 copy of the Apache License, Version 2.0 along with this file; see the
 file LICENSE. If not, you may obtain a copy of the License at
 

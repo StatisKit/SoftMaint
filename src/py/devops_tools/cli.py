@@ -47,23 +47,21 @@ def main_notice():
                         action = 'store_false')
     parser.set_defaults(check = False)
     args = parser.parse_args()
-    
+
     notice = Path(args.directory)/args.notice
     if not notice.exists():
         raise ValueError("'notice' argument is invalid")
     with open(notice, 'r') as filehandler:
         notice = filehandler.read()
 
-    if args.check:
-        md5sum = compute_md5sum(args.directory)
-
     for filepath in walkfiles(args.directory):
         content = replace_notice(filepath, notice)
+        if args.check:
+            with open(filepath, "r") as filehandler:
+                if not content == filehandler.read():
+                    raise Exception("NOTICE file has changed or was not included in file '" + str(filepath) + "'")
         with open(filepath, "w") as filehandler:
             filehandler.write(content)
-
-    if args.check and not md5sum == compute_md5sum(args.directory):
-        raise Exception("NOTICE file has changed or was not included in all files")
 
 def main_md5sum():
 

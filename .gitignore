@@ -12,3 +12,6 @@ build
 .sconsign.dblite
 *.sublime-workspace
 *.back
+run_test.sh
+conda_build.sh
+conda_test_runner.sh

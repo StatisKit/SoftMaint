@@ -49,7 +49,7 @@ requirements:
 
 test:
   source_files:
-     - *
+     - '*'
   # requires:
   #  - python
   commands:

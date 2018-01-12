@@ -20,11 +20,11 @@
 ## mplied. See the License for the specific language governing           ##
 ## permissions and limitations under the License.                        ##
 
-import md5
+import hashlib
 from .walkfiles import main as walkfiles
 
 def compute_md5sum(directory):
-    md5sum = md5.new()
+    md5sum = hashlib.md5()
     for filepath in walkfiles(directory):
         with open(filepath, 'r') as filehandler:
             md5sum.update(filehandler.read())

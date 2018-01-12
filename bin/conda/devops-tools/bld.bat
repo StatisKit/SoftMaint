@@ -23,7 +23,7 @@
 echo ON
 
 if "%PY3K%" == "1" (
-  2to3 -n -w %SRC_DIR%\src\py\softmaint
+  2to3 -n -w %SRC_DIR%\src\py\devops_tools
   :: 2to3 -n -w %SRC_DIR%\test
 )
 

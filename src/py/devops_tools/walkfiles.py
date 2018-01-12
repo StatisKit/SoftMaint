@@ -38,12 +38,14 @@ def fs_walkfiles(dirpath):
     return [filepath for filepath in filepaths if not filepath.basename() in ['NOTICE', 'LICENSE'] and not any(parent.startswith('.') for parent in filepath.relpath(dirpath).splitall()[1:])]
 
 def git_walkfiles(dirpath, vcs=None):
-    return [filepath for filepath in fs_walkfiles(dirpath) if not git_ls(filepath)]
+    return [filepath for filepath in fs_walkfiles(dirpath) if git_ls(filepath)]
 
 def git_ls(filepath):
-    try:
-        subprocess.check_output(['git', 'ls-files', filepath])
-    except:
-        return False
-    else:
+    process = subprocess.Popen(['git', 'ls-files', filepath],
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    out, err = process.communicate()
+    if out:
         return True
+    else:
+        return False

@@ -47,7 +47,7 @@ def main_notice():
                         action = 'store_false')
     parser.set_defaults(check = False)
     args = parser.parse_args()
-
+    
     notice = Path(args.directory)/args.notice
     if not notice.exists():
         raise ValueError("'notice' argument is invalid")

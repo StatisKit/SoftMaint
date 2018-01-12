@@ -97,7 +97,7 @@ def generate_notice(filepath, notice):
             max_width = max(max_width, len(line))
         return [SETTING["left"] + line + " " * (max_width - len(line)) + SETTING["right"] + "\n" for line in lines]
 
-def insert_notice(filepath, notice, back_up=False):
+def replace_notice(filepath, notice):
     if not isinstance(filepath, Path):
         filepath = Path(filepath)
     if not(filepath.exists() or filepath.isfile()):
@@ -106,9 +106,6 @@ def insert_notice(filepath, notice, back_up=False):
     if SETTING is not None:
         with open(filepath, "r") as filehandler:
             lines = list(filehandler.readlines())
-        if back_up:
-            with open(filepath + ".back", "w") as filehandler:
-                filehandler.writelines(lines)
         if len(lines) > 0:
             start, end = find_notice(filepath)
             newlines = lines[:start]
@@ -121,5 +118,8 @@ def insert_notice(filepath, notice, back_up=False):
                 newlines += lines[end + 1:]
         else:
             newlines = generate_notice(filepath, notice)
-        with open(filepath, "w") as filehandler:
-            filehandler.writelines(newlines)
+    else:
+        with open(filepath, "r") as filehandler:
+            newlines = filehandler.readlines()
+    return "".join(newlines)
+

@@ -27,8 +27,6 @@ from .walkfiles import main as walkfiles
 from .notice import replace_notice
 from .md5sum import compute_md5sum
 
-def main_check():
-
 def main_notice():
 
     parser = argparse.ArgumentParser()

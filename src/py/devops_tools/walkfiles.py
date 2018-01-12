@@ -27,21 +27,22 @@ def main(dirpath):
     if not isinstance(dirpath, Path):
         dirpath = Path(dirpath)
     if (dirpath/'.gitignore').exists():
-        return git(dirpath)
-    return fs(dirpath)
+        return git_walkfiles(dirpath)
+    else:
+        return fs_walkfiles(dirpath)
 
-def fs(dirpath):
+def fs_walkfiles(dirpath):
     if not isinstance(dirpath, Path):
         dirpath = Path(dirpath)
     filepaths = list(dirpath.walkfiles())
     return [filepath for filepath in filepaths if not filepath.basename() in ['NOTICE', 'LICENSE'] and not any(parent.startswith('.') for parent in filepath.relpath(dirpath).splitall()[1:])]
 
-def git(dirpath, vcs=None):
-    return [filepath for filepath in fs(dirpath) if not git_ignore(filepath)]
+def git_walkfiles(dirpath, vcs=None):
+    return [filepath for filepath in fs_walkfiles(dirpath) if not git_ls(filepath)]
 
-def git_ignore(filepath):
+def git_ls(filepath):
     try:
-        subprocess.check_output(['git', 'check-ignore', filepath])
+        subprocess.check_output(['git', 'ls-files', filepath])
     except:
         return False
     else:

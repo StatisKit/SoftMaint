@@ -54,7 +54,6 @@ def main_notice():
     with open(notice, 'r') as filehandler:
         notice = filehandler.read()
     for filepath in walkfiles(args.directory):
-        print filepath
         content = replace_notice(filepath, notice)
         if args.check:
             with open(filepath, "r") as filehandler:

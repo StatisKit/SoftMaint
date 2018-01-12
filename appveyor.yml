@@ -26,9 +26,9 @@ platform:
 
 environment:
   matrix:
-    - CONDA_RECIPE: bin\conda\python-softmaint
+    - CONDA_RECIPE: bin\conda\devops-tools
       CONDA_VERSION: 2
-    - CONDA_RECIPE: bin\conda\python-softmaint
+    - CONDA_RECIPE: bin\conda\devops-tools
       CONDA_VERSION: 3
             
 install:
@@ -47,8 +47,6 @@ after_build:
 
 deploy:
   provider: Script
-  on:
-    branch: master
  
 before_deploy:
   - call before_deploy.bat

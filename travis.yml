@@ -29,9 +29,9 @@ os:
 sudo: required
   
 env:
-  - CONDA_RECIPE=bin/conda/python-softmaint
+  - CONDA_RECIPE=bin/conda/devops-tools
     CONDA_VERSION=2
-  - CONDA_RECIPE=bin/conda/python-softmaint
+  - CONDA_RECIPE=bin/conda/devops-tools
     CONDA_VERSION=3
     
 install:
@@ -58,7 +58,7 @@ deploy:
   skip_cleanup: true
   provider: script
   on:
-      branch: master
+      all_branches: true
   script: bash deploy_script.sh
 
 after_deploy:

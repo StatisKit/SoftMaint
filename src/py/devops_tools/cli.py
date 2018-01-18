@@ -22,10 +22,15 @@
 
 from path import Path
 import argparse
+import os
 
 from .walkfiles import main as walkfiles
 from .notice import replace_notice
 from .md5sum import compute_md5sum
+from .cpu_count import get_range_cpu_count, get_default_cpu_count, activate_cpu_count, deactivate_cpu_count
+from .system import SYSTEM
+from .sublime_text import config_paths, BUILD_TARGET, BUILD_SYSTEM
+from .conda import get_current_prefix, get_default_prefix, get_current_environment
 
 def main_notice():
 
@@ -71,3 +76,45 @@ def main_md5sum():
                         default = '.')
     args = parser.parse_args()
     print(compute_md5sum(args.directory))
+
+def main_cpu_count():
+
+    if SYSTEM == 'win':
+        ext = 'bat'
+    else:
+        ext = 'sh'
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('activate',
+                        nargs='?',
+                        help  = 'The file in which the definition of CPU_COUNT environment variable will be setted',
+                        default = os.path.join(get_current_prefix(), 'etc', 'conda', 'activate.d', 'activate-cpu_count.' + ext))
+    parser.add_argument('deactivate',
+                        nargs='?',
+                        help  = 'The file in which the definition of CPU_COUNT environment variable will be unsetted',
+                        default = os.path.join(get_current_prefix(), 'etc', 'conda', 'deactivate.d', 'deactivate-cpu_count.' + ext))
+    parser.add_argument('cpu_count',
+                        help  = 'The number of CPUs to use with builds',
+                        nargs='?',
+                        type = int,
+                        choices = get_range_cpu_count(),
+                        default = get_default_cpu_count())
+    args = parser.parse_args()
+
+    with open(args.activate, 'w') as filehandler:
+        filehandler.write(activate_cpu_count(args.cpu_count))
+
+    with open(args.deactivate, 'w') as filehandler:
+        filehandler.write(deactivate_cpu_count())
+
+def main_sublime_text():
+
+    configs = config_paths()
+    for config in configs:
+        directory = os.path.join(config, 'Packages', 'StatisKit')
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        with open(os.path.join(directory, 'SCons.sublime-build'), 'w') as filehandler:
+            filehandler.write(BUILD_SYSTEM.replace('{{ prefix }}', get_current_prefix()).replace('{{ environment }}', get_current_environment()))
+        with open(os.path.join(directory, 'scons.py'), 'w') as filehandler:
+            filehandler.write(BUILD_TARGET)

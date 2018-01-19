@@ -1,5 +1,10 @@
 import os
 
+from .login import login
+
+def anaconda_login(username=None, password=None):
+    return login('Anaconda Cloud', username=username, password=password)
+
 def get_current_prefix():
     return os.environ['CONDA_PREFIX']
 

@@ -31,6 +31,7 @@ from .cpu_count import get_range_cpu_count, get_default_cpu_count, activate_cpu_
 from .system import SYSTEM
 from .sublime_text import config_paths, BUILD_TARGET, BUILD_SYSTEM
 from .conda import get_current_prefix, get_default_prefix, get_current_environment
+from .travis import travis_scripts
 
 def main_notice():
 
@@ -85,15 +86,18 @@ def main_cpu_count():
         ext = 'sh'
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('activate',
+    parser.add_argument('--activate',
+                        dest='activate',
                         nargs='?',
                         help  = 'The file in which the definition of CPU_COUNT environment variable will be setted',
                         default = os.path.join(get_current_prefix(), 'etc', 'conda', 'activate.d', 'activate-cpu_count.' + ext))
-    parser.add_argument('deactivate',
+    parser.add_argument('--deactivate',
+                        dest='deactivate',
                         nargs='?',
                         help  = 'The file in which the definition of CPU_COUNT environment variable will be unsetted',
                         default = os.path.join(get_current_prefix(), 'etc', 'conda', 'deactivate.d', 'deactivate-cpu_count.' + ext))
-    parser.add_argument('cpu_count',
+    parser.add_argument('--cpu-count',
+                        dest='cpu_count',
                         help  = 'The number of CPUs to use with builds',
                         nargs='?',
                         type = int,
@@ -118,3 +122,55 @@ def main_sublime_text():
             filehandler.write(BUILD_SYSTEM.replace('{{ prefix }}', get_current_prefix()).replace('{{ environment }}', get_current_environment()))
         with open(os.path.join(directory, 'scons.py'), 'w') as filehandler:
             filehandler.write(BUILD_TARGET)
+
+def main_travis_ci():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('directory',
+                        help  = 'The directory in which script files will be writte',
+                        nargs = '?',
+                        default = 'travis')
+    parser.add_argument('--anaconda-username',
+                        dest='anaconda_username',
+                        nargs='?',
+                        help  = 'Anaconda Cloud Username',
+                        default = None)
+    parser.add_argument('--anaconda-password',
+                        dest='anaconda_password',
+                        nargs='?',
+                        help  = 'Anaconda Cloud Password',
+                        default = None)
+    parser.add_argument('--anaconda-upload',
+                        dest='anaconda_upload',
+                        nargs='?',
+                        help  = 'Anaconda Cloud Organization',
+                        default = None)
+    if SYSTEM == 'linux':
+        parser.add_argument('--docker-username',
+                    dest='docker_username',
+                    nargs='?',
+                    help  = 'Docker Hub Username',
+                    default = None)
+        parser.add_argument('--docker-password',
+                            dest='docker_password',
+                            nargs='?',
+                            help  = 'Docker Hub Password',
+                            default = None)
+        parser.add_argument('--docker-upload',
+                            dest='docker_upload',
+                            nargs='?',
+                            help  = 'Docker Hub Organization',
+                            default = None)
+    args = parser.parse_args()
+
+    if SYSTEM == 'linux':
+        kwargs = dict(docker_username=args.docker_username,
+                      docker_password=args.docker_password,
+                      docker_upload=args.docker_upload)
+    else:
+        kwargs = dict()
+
+    travis_scripts(anaconda_username=args.anaconda_username,
+                   anaconda_password=args.anaconda_password,
+                   anaconda_upload=args.anaconda_upload,
+                   **kwargs)

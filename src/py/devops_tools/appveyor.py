@@ -14,7 +14,7 @@ STAGES = ['install',
           'on_succes',
           'on_failure']
 
-def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_upload='', anaconda_label='release'):
+def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_upload='', anaconda_label='release', with_log=False):
     if SYSTEM == 'win':
         if os.path.exists('appveyor.yml'):
             appveyor = 'appveyor.yml'
@@ -51,7 +51,7 @@ def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_up
                             jobhandler.write('\nif errorlevel 1 exit 1\n'.join(appveyor.get(stage, [])) + '\n')
                         jobhandler.writelines('del ' + os.path.join('appveyor_job_' + str(index) + '.bat') + '\nif errorlevel 1 exit 1')
                     buildhandler.write('if exist ' + 'appveyor_job_' + str(index) + '.bat (\n')
-                    buildhandler.write('  start ' + 'appveyor_job_' + str(index) + '.bat ^1^> log_' + str(index) + ' ^2^>^&^1\n')
+                    buildhandler.write('  start /wait ' + 'appveyor_job_' + str(index) + '.bat ' + with_log * (' ^1^> log_' + str(index) + ' ^2^>^&^1\n'))
                     buildhandler.write('  if errorlevel 1 exit 1\n')
                     buildhandler.write(')\n')
             buildhandler.write('\ndel appveyor_build.bat\nif errorlevel 1 exit 1\n')

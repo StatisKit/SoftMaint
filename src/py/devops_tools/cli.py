@@ -32,6 +32,7 @@ from .system import SYSTEM
 from .sublime_text import config_paths, BUILD_TARGET, BUILD_SYSTEM
 from .conda import get_current_prefix, get_default_prefix, get_current_environment
 from .travis import travis_scripts
+from .appveyor import appveyor_scripts
 
 def main_notice():
 
@@ -145,6 +146,11 @@ def main_travis_ci():
                         nargs='?',
                         help  = 'Anaconda Cloud Organization',
                         default = None)
+    parser.add_argument('--anaconda-label',
+                        dest='anaconda_label',
+                        nargs='?',
+                        help  = 'Anaconda Cloud Organization\'s Label',
+                        default = 'release')
     if SYSTEM == 'linux':
         parser.add_argument('--docker-username',
                     dest='docker_username',
@@ -173,4 +179,39 @@ def main_travis_ci():
     travis_scripts(anaconda_username=args.anaconda_username,
                    anaconda_password=args.anaconda_password,
                    anaconda_upload=args.anaconda_upload,
+                   anaconda_label=args.anaconda_label,
                    **kwargs)
+
+def main_appveyor_ci():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('directory',
+                        help  = 'The directory in which script files will be writte',
+                        nargs = '?',
+                        default = 'travis')
+    parser.add_argument('--anaconda-username',
+                        dest='anaconda_username',
+                        nargs='?',
+                        help  = 'Anaconda Cloud Username',
+                        default = None)
+    parser.add_argument('--anaconda-password',
+                        dest='anaconda_password',
+                        nargs='?',
+                        help  = 'Anaconda Cloud Password',
+                        default = None)
+    parser.add_argument('--anaconda-upload',
+                        dest='anaconda_upload',
+                        nargs='?',
+                        help  = 'Anaconda Cloud Organization',
+                        default = None)
+    parser.add_argument('--anaconda-label',
+                        dest='anaconda_label',
+                        nargs='?',
+                        help  = 'Anaconda Cloud Organization\'s Label',
+                        default = 'release')
+    args = parser.parse_args()
+
+    travis_scripts(anaconda_username=args.anaconda_username,
+                   anaconda_password=args.anaconda_password,
+                   anaconda_upload=args.anaconda_upload,
+                   anaconda_label=args.anaconda_label)

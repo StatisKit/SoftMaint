@@ -14,7 +14,7 @@ STAGES = ['install',
           'after_deploy',
           'after_script']
 
-def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_upload='',
+def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_upload='', anaconda_label='release',
                    docker_username=None, docker_password=None, docker_upload=''):
     if SYSTEM in ['linux', 'osx']:
         if os.path.exists('travis.yml'):
@@ -47,7 +47,7 @@ def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_uplo
             buildhandler.write('export ANACONDA_USERNAME=' + anaconda_username + '\n')
             buildhandler.write('export ANACONDA_PASSWORD=' + anaconda_password + '\n')
             buildhandler.write('export ANACONDA_UPLOAD=' + anaconda_upload + '\n')
-            buildhandler.write('export ANACONDA_LABEL=release\n\n')
+            buildhandler.write('export ANACONDA_LABEL=' + anaconda_label + '\n\n')
             if SYSTEM == 'linux':
                 buildhandler.write('export DOCKER_USERNAME=' + docker_username + '\n')
                 buildhandler.write('export DOCKER_PASSWORD=' + docker_password + '\n')
@@ -65,9 +65,7 @@ def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_uplo
                                 jobhandler.write(travis.get(stage, {}).get('script', {}) + '\n')
                             else:
                                 jobhandler.write('\n'.join(travis.get(stage, [])) + '\n')
-                    buildhandler.write('bash ' +'travis_job_' + str(index) + '.sh\n\n')
-            buildhandler.write('rm travis_build.sh\n')
-            for index, job in enumerate(travis.get('env')):
-                if not set(job) in exclude:
-                    buildhandler.write('rm travis_job_' + str(index) + '.sh\n')
+                        jobhandler.writelines('rm ' + os.path.join('travis_job_' + str(index) + '.sh') + '\n')
+                    buildhandler.write('bash ' +'travis_job_' + str(index) + '.sh\n')
+            buildhandler.write('\nrm travis_build.sh\n')
             buildhandler.write('\nset +ve')

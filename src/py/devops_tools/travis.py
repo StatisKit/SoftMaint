@@ -54,18 +54,21 @@ def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_uplo
                 buildhandler.write('export DOCKER_UPLOAD=' + docker_upload + '\n\n')
             exclude = set()
             for job in travis.get('matrix', {}).get('exclude', []):
-                if not SYSTEM == job.get('os', SYSTEM):
-                    exclude.add(tuple(sorted(job.get('env', []))))
+                if SYSTEM == job.get('os', SYSTEM):
+                    exclude.add(tuple(sorted(job.get('env', '').split())))
             for index, job in enumerate(travis.get('env')):
                 if not tuple(sorted(job)) in exclude:
                     with open(os.path.join('travis_job_' + str(index) + '.sh'), 'w') as jobhandler:
+                        jobhandler.write('set -ve\n\n')
                         jobhandler.writelines(['export ' + var + '\n' for var in job.split()])
+                        jobhandler.write('\n')
                         for stage in STAGES:
                             if stage == 'deploy':
                                 jobhandler.write(travis.get(stage, {}).get('script', {}) + '\n')
                             else:
                                 jobhandler.write('\n'.join(travis.get(stage, [])) + '\n')
-                        jobhandler.writelines('rm ' + os.path.join('travis_job_' + str(index) + '.sh') + '\n')
+                        jobhandler.writelines('\nrm ' + os.path.join('travis_job_' + str(index) + '.sh') + '\n')
+                        jobhandler.write('\nset -ve')
                     buildhandler.write('bash ' +'travis_job_' + str(index) + '.sh\n')
             buildhandler.write('\nrm travis_build.sh\n')
             buildhandler.write('\nset +ve')

@@ -33,16 +33,14 @@ with open('README.rst', 'r') as filehandler:
 
 setup(packages = packages.keys(),
       package_dir = {"" : "src" + os.sep + "py"},
-      name = 'python-softmaint',
+      name = 'devops_tools',
       version = '1.0.0',
       author = 'Pierre Fernique',
       author_email = 'pfernique@gmail.com',
-      description = 'A Tool to Ease Software Maintenance',
+      description = 'Tools for unifying software development and operation',
       long_description = '',
       license = 'Apache License 2.0',
       package_data = {package: [ "*.so", "*.dll"] for package in packages},
-      entry_points = {
-        'console_scripts': ['softmaint-license = softmaint.cli:license'],
-        },
+      entry_points = {},
         zip_safe = True
     )

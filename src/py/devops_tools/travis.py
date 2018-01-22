@@ -55,9 +55,9 @@ def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_uplo
             exclude = set()
             for job in travis.get('matrix', {}).get('exclude', []):
                 if not SYSTEM == job.get('os', SYSTEM):
-                    exclude.add(tuple(set(job.get('env', []))))
+                    exclude.add(tuple(sorted(job.get('env', []))))
             for index, job in enumerate(travis.get('env')):
-                if not tuple(set(job)) in exclude:
+                if not tuple(sorted(job)) in exclude:
                     with open(os.path.join('travis_job_' + str(index) + '.sh'), 'w') as jobhandler:
                         jobhandler.writelines(['export ' + var + '\n' for var in job.split()])
                         for stage in STAGES:

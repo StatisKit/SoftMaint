@@ -49,9 +49,6 @@ def main_notice():
                         dest = 'check',
                         action = 'store_true',
                         help = "")
-    parser.add_argument('--no-check',
-                        dest = 'check',
-                        action = 'store_false')
     parser.set_defaults(check = False)
     args = parser.parse_args()
 
@@ -132,9 +129,6 @@ def main_travis_ci():
                         dest = 'dry_run',
                         action = 'store_true',
                         help = "Only write script files")
-    parser.add_argument('--no-dry-run',
-                        dest = 'dry_run',
-                        action = "Execute script files")
     parser.set_defaults(dry_run = False)
     parser.add_argument('--anaconda-username',
                         dest='anaconda_username',
@@ -199,9 +193,6 @@ def main_appveyor_ci():
                         dest = 'dry_run',
                         action = 'store_true',
                         help = "Only write script files")
-    parser.add_argument('--no-dry-run',
-                        dest = 'dry_run',
-                        action = "Execute script files")
     parser.set_defaults(dry_run = False)
     parser.add_argument('--anaconda-username',
                         dest='anaconda_username',

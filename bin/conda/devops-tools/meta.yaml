@@ -35,6 +35,7 @@ build:
     - devops-cpu_count = devops_tools.cli:main_cpu_count
     - devops-sublime_text = devops_tools.cli:main_sublime_text
     - devops-travis_ci = devops_tools.cli:main_travis_ci
+  preserve_egg_dir: False
 
 about:
   home: http://statiskit.readthedocs.org

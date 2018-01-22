@@ -57,7 +57,7 @@ def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_uplo
                 if SYSTEM == job.get('os', SYSTEM):
                     exclude.add(tuple(sorted(job.get('env', '').split())))
             for index, job in enumerate(travis.get('env')):
-                if not tuple(sorted(job)) in exclude:
+                if not tuple(sorted(job.split())) in exclude:
                     with open(os.path.join('travis_job_' + str(index) + '.sh'), 'w') as jobhandler:
                         jobhandler.write('set -ve\n\n')
                         jobhandler.writelines(['export ' + var + '\n' for var in job.split()])

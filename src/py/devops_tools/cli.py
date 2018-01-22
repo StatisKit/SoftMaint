@@ -217,10 +217,10 @@ def main_appveyor_ci():
 
     args = parser.parse_args()
 
-    travis_scripts(anaconda_username=args.anaconda_username,
-                   anaconda_password=args.anaconda_password,
-                   anaconda_upload=args.anaconda_upload,
-                   anaconda_label=args.anaconda_label)
+    appveyor_scripts(anaconda_username=args.anaconda_username,
+                     anaconda_password=args.anaconda_password,
+                     anaconda_upload=args.anaconda_upload,
+                     anaconda_label=args.anaconda_label)
 
 
     if not args.dry_run:

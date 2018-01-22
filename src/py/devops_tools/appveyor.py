@@ -37,7 +37,7 @@ def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_up
             buildhandler.write('set CI=false\n')
             buildhandler.write('set ANACONDA_USERNAME=' + anaconda_username + '\n')
             buildhandler.write('set ANACONDA_PASSWORD=' + anaconda_password + '\n')
-            buildhandler.write('export ANACONDA_UPLOAD=' + anaconda_upload + '\n')
+            buildhandler.write('set ANACONDA_UPLOAD=' + anaconda_upload + '\n')
             buildhandler.write('set ANACONDA_LABEL=' + anaconda_label + '\n\n')
             exclude = set()
             # for job in appveyor.get('matrix', {}).get('exclude', []):
@@ -46,12 +46,12 @@ def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_up
             for index, job in enumerate(appveyor.get('environment').get('matrix')):
                 if not tuple(sorted(job)) in exclude:
                     with open(os.path.join('appveyor_job_' + str(index) + '.bat'), 'w') as jobhandler:
-                        jobhandler.writelines(['set ' + key + '=' + value + '\n' for key, value in job.items()])
+                        jobhandler.writelines(['set ' + str(key) + '=' + str(value) + '\n' for key, value in job.items()])
                         for stage in STAGES:
                             jobhandler.write('\nif errorlevel 1 exit 1\n'.join(appveyor.get(stage, [])) + '\n')
                         jobhandler.writelines('del ' + os.path.join('appveyor_job_' + str(index) + '.bat') + '\nif errorlevel 1 exit 1')
                     buildhandler.write('if exist ' + 'appveyor_job_' + str(index) + '.bat (\n')
-                    buildhandler.write('  start ' + 'appveyor_job_' + str(index) + '.bat\n')
+                    buildhandler.write('  start ' + 'appveyor_job_' + str(index) + '.bat ^1^> log_' + str(index) + ' ^2^>^&^1\n')
                     buildhandler.write('  if errorlevel 1 exit 1\n')
                     buildhandler.write(')\n')
             buildhandler.write('\ndel appveyor_build.bat\nif errorlevel 1 exit 1\n')

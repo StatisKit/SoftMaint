@@ -127,10 +127,15 @@ def main_sublime_text():
 def main_travis_ci():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('directory',
-                        help  = 'The directory in which script files will be writte',
-                        nargs = '?',
-                        default = 'travis')
+
+    parser.add_argument('--dry-run',
+                        dest = 'dry_run',
+                        action = 'store_true',
+                        help = "Only write script files")
+    parser.add_argument('--no-dry-run',
+                        dest = 'dry_run',
+                        action = "Execute script files")
+    parser.set_defaults(dry_run = False)
     parser.add_argument('--anaconda-username',
                         dest='anaconda_username',
                         nargs='?',
@@ -167,6 +172,7 @@ def main_travis_ci():
                             nargs='?',
                             help  = 'Docker Hub Organization',
                             default = None)
+
     args = parser.parse_args()
 
     if SYSTEM == 'linux':
@@ -182,13 +188,21 @@ def main_travis_ci():
                    anaconda_label=args.anaconda_label,
                    **kwargs)
 
+    if not args.dry_run:
+        os.system('bash travis_build.sh')
+
 def main_appveyor_ci():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('directory',
-                        help  = 'The directory in which script files will be writte',
-                        nargs = '?',
-                        default = 'travis')
+
+    parser.add_argument('--dry-run',
+                        dest = 'dry_run',
+                        action = 'store_true',
+                        help = "Only write script files")
+    parser.add_argument('--no-dry-run',
+                        dest = 'dry_run',
+                        action = "Execute script files")
+    parser.set_defaults(dry_run = False)
     parser.add_argument('--anaconda-username',
                         dest='anaconda_username',
                         nargs='?',
@@ -209,9 +223,14 @@ def main_appveyor_ci():
                         nargs='?',
                         help  = 'Anaconda Cloud Organization\'s Label',
                         default = 'release')
+
     args = parser.parse_args()
 
     travis_scripts(anaconda_username=args.anaconda_username,
                    anaconda_password=args.anaconda_password,
                    anaconda_upload=args.anaconda_upload,
                    anaconda_label=args.anaconda_label)
+
+
+    if not args.dry_run:
+        os.system('start appveyor_build.bat')

@@ -1,5 +1,6 @@
 import os
 import yaml
+import git
 
 from .conda import anaconda_login
 from .docker import docker_login
@@ -23,6 +24,11 @@ def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_uplo
             travis = '.travis.yml'
         else:
             raise IOError('No travis.yml or .travis.yml found')
+        try:
+            repo = git.Repo('.')
+            branch = repo.active_branch.name
+        except:
+            branch = 'master'
         with open(travis, 'r') as filehandler:
             travis = yaml.load(filehandler.read())
         if not SYSTEM in travis.get('os', [SYSTEM]):
@@ -44,6 +50,7 @@ def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_uplo
             buildhandler.write('set -ve\n\n')
             buildhandler.write('export CI=false\n')
             buildhandler.write('export TRAVIS_OS_NAME=' + SYSTEM + '\n')
+            buildhandler.write('export TRAVIS_BRANCH=' + branch + '\n\n')
             buildhandler.write('export ANACONDA_USERNAME=' + anaconda_username + '\n')
             buildhandler.write('export ANACONDA_PASSWORD=' + anaconda_password + '\n')
             buildhandler.write('export ANACONDA_UPLOAD=' + anaconda_upload + '\n')

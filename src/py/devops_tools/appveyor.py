@@ -1,5 +1,6 @@
 import os
 import yaml
+import git
 
 from .conda import anaconda_login
 from .system import SYSTEM
@@ -22,6 +23,11 @@ def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_up
             appveyor = '.appveyor.yml'
         else:
             raise IOError('No appveyor.yml or .appveyor.yml found')
+        try:
+            repo = git.Repo('.')
+            branch = repo.active_branch.name
+        except:
+            branch = 'master'
         with open(appveyor, 'r') as filehandler:
             appveyor = yaml.load(filehandler.read())
         if not SYSTEM in appveyor.get('os', [SYSTEM]):
@@ -35,6 +41,7 @@ def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_up
         with open('appveyor_build.bat', 'w') as buildhandler:
             buildhandler.write('echo ON\n\n')
             buildhandler.write('set CI=false\n')
+            buildhandler.write('set APPVEYOR_REPO_BRANCH=' + branch + '\n\n')
             buildhandler.write('set ANACONDA_USERNAME=' + anaconda_username + '\n')
             buildhandler.write('set ANACONDA_PASSWORD=' + anaconda_password + '\n')
             buildhandler.write('set ANACONDA_UPLOAD=' + anaconda_upload + '\n')

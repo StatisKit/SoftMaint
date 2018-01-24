@@ -52,6 +52,7 @@ requirements:
     - six
     - path.py
     - pyyaml
+    - gitpython
 
 # test:
 #   source_files:

@@ -78,6 +78,7 @@ def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_uplo
                         jobhandler.write('\nset -ve')
                     buildhandler.write('if [[ -f ' + 'travis_job_' + str(index) + '.sh ]]; then\n')
                     buildhandler.write('  bash ' + 'travis_job_' + str(index) + '.sh\n')
+                    buildhandler.write('  rm -rf travis-ci\n')
                     buildhandler.write('fi\n')
             buildhandler.write('\nrm travis_build.sh\n')
             buildhandler.write('\nset +ve')

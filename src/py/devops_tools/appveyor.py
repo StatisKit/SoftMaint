@@ -62,6 +62,8 @@ def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_up
                     buildhandler.write('if exist ' + 'appveyor_job_' + str(index) + '.bat (\n')
                     buildhandler.write('  start /wait ' + 'appveyor_job_' + str(index) + '.bat\n')
                     buildhandler.write('  if errorlevel 1 exit /b 1\n')
+                    buildhandler.write('  rmdir appveyor-ci /S /q\n')
+                    buildhandler.write('  if errorlevel 1 exit /b 1\n')
                     buildhandler.write(')\n')
             buildhandler.write('\necho OFF\n')
             buildhandler.write('\ndel appveyor_build.bat & exit 0')

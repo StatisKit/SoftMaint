@@ -15,7 +15,7 @@ STAGES = ['install',
           'on_succes',
           'on_failure']
 
-def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_upload='', anaconda_label='release', with_log=False):
+def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_upload='', anaconda_label='release'):
     if SYSTEM == 'win':
         if os.path.exists('appveyor.yml'):
             appveyor = 'appveyor.yml'
@@ -53,13 +53,15 @@ def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_up
             for index, job in enumerate(appveyor.get('environment').get('matrix')):
                 if not tuple(sorted(job)) in exclude:
                     with open(os.path.join('appveyor_job_' + str(index) + '.bat'), 'w') as jobhandler:
+                        jobhandler.write('echo ON\n\n')
                         jobhandler.writelines(['set ' + str(key) + '=' + str(value) + '\n' for key, value in job.items()])
                         for stage in STAGES:
-                            jobhandler.write('\nif errorlevel 1 exit 1\n'.join(appveyor.get(stage, [])) + '\n')
-                        jobhandler.writelines('del ' + os.path.join('appveyor_job_' + str(index) + '.bat') + '\nif errorlevel 1 exit 1')
+                            jobhandler.write('\nif errorlevel 1 exit /b 1\n'.join(appveyor.get(stage, [])) + '\n')
+                        jobhandler.write('\necho OFF\n')
+                        jobhandler.write('\ndel appveyor_job_' + str(index) + '.bat & exit 0')
                     buildhandler.write('if exist ' + 'appveyor_job_' + str(index) + '.bat (\n')
-                    buildhandler.write('  start /wait ' + 'appveyor_job_' + str(index) + '.bat ' + with_log * (' ^1^> log_' + str(index) + ' ^2^>^&^1\n'))
-                    buildhandler.write('  if errorlevel 1 exit 1\n')
+                    buildhandler.write('  start /wait ' + 'appveyor_job_' + str(index) + '.bat\n')
+                    buildhandler.write('  if errorlevel 1 exit /b 1\n')
                     buildhandler.write(')\n')
-            buildhandler.write('\ndel appveyor_build.bat\nif errorlevel 1 exit 1\n')
-            buildhandler.write('\necho OFF')
+            buildhandler.write('\necho OFF\n')
+            buildhandler.write('\ndel appveyor_build.bat & exit 0')

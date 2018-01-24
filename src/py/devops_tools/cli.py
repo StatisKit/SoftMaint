@@ -184,7 +184,7 @@ def main_travis_ci():
 
     if not args.dry_run:
         os.system('bash travis_build.sh')
-
+        
 def main_appveyor_ci():
 
     parser = argparse.ArgumentParser()
@@ -194,11 +194,6 @@ def main_appveyor_ci():
                         action = 'store_true',
                         help = "Only write script files")
     parser.set_defaults(dry_run = False)
-    parser.add_argument('--with-log',
-                        dest = 'with_log',
-                        action = 'store_true',
-                        help = "Save output in log gfles")
-    parser.set_defaults(with_log = False)
     parser.add_argument('--anaconda-username',
                         dest='anaconda_username',
                         nargs='?',
@@ -225,9 +220,8 @@ def main_appveyor_ci():
     appveyor_scripts(anaconda_username=args.anaconda_username,
                      anaconda_password=args.anaconda_password,
                      anaconda_upload=args.anaconda_upload,
-                     anaconda_label=args.anaconda_label,
-                     with_log=args.with_log)
+                     anaconda_label=args.anaconda_label)
 
 
     if not args.dry_run:
-        os.system('start /wait appveyor_build.bat' + args.with_log * ' ^1^> log.txt ^2^>^&^1')
+        os.system('start /wait appveyor_build.bat')

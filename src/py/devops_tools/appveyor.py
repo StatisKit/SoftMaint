@@ -12,8 +12,8 @@ STAGES = ['install',
           'before_deploy',
           'deploy_script',
           'after_deploy',
-          'on_succes',
-          'on_failure']
+          'on_success',
+          'on_finish']
 
 def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_upload='', anaconda_label='release'):
     if SYSTEM == 'win':

@@ -57,6 +57,7 @@ def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_up
                         jobhandler.writelines(['set ' + str(key) + '=' + str(value) + '\n' for key, value in job.items()])
                         for stage in STAGES:
                             jobhandler.write('\nif errorlevel 1 exit /b 1\n'.join(appveyor.get(stage, [])) + '\n')
+                        jobhandler.write('cd ..\n')
                         jobhandler.write('\necho OFF\n')
                         jobhandler.write('\ndel appveyor_job_' + str(index) + '.bat & exit 0')
                     buildhandler.write('if exist ' + 'appveyor_job_' + str(index) + '.bat (\n')

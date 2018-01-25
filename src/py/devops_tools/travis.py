@@ -74,6 +74,7 @@ def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_uplo
                                 jobhandler.write(travis.get(stage, {}).get('script', {}) + '\n')
                             else:
                                 jobhandler.write('\n'.join(travis.get(stage, [])) + '\n')
+                        jobhandler.writelines('cd ..\n')
                         jobhandler.writelines('\nrm ' + os.path.join('travis_job_' + str(index) + '.sh') + '\n')
                         jobhandler.write('\nset -ve')
                     buildhandler.write('if [[ -f ' + 'travis_job_' + str(index) + '.sh ]]; then\n')

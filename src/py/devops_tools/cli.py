@@ -150,6 +150,16 @@ def main_travis_ci():
                         nargs='?',
                         help  = 'Anaconda Cloud Organization\'s Label',
                         default = 'release')
+    parser.add_argument('--conda-prefix',
+                        dest='conda_prefix',
+                        help  = 'The directory in which Conda will be installed',
+                        nargs = '?',
+                        default = os.path.join(os.environ['HOME'], 'miniconda'))
+    parser.add_argument('--no-deploy',
+                        dest = 'deploy',
+                        action = 'store_false',
+                        help = "Release locally")
+    parser.set_defaults(deploy = True)
     if SYSTEM == 'linux':
         parser.add_argument('--docker-username',
                     dest='docker_username',
@@ -180,6 +190,8 @@ def main_travis_ci():
                    anaconda_password=args.anaconda_password,
                    anaconda_upload=args.anaconda_upload,
                    anaconda_label=args.anaconda_label,
+                   conda_prefix=args.conda_prefix,
+                   deploy=args.deploy,
                    **kwargs)
 
     if not args.dry_run:

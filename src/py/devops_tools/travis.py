@@ -16,6 +16,7 @@ STAGES = ['install',
           'after_script']
 
 def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_upload='', anaconda_label='release',
+                   conda_prefix=None, deploy=True,
                    docker_username=None, docker_password=None, docker_upload=''):
     if SYSTEM in ['linux', 'osx']:
         if os.path.exists('travis.yml'):
@@ -49,6 +50,9 @@ def travis_scripts(anaconda_username=None, anaconda_password=None, anaconda_uplo
         with open('travis_build.sh', 'w') as buildhandler:
             buildhandler.write('set -ve\n\n')
             buildhandler.write('export CI=false\n')
+            if not deploy:
+                buildhandler.write('export ANACONDA_DEPLOY=false\n')
+                buildhandler.write('export DOCKER_DEPLOY=false\n')
             buildhandler.write('export TRAVIS_OS_NAME=' + SYSTEM + '\n')
             buildhandler.write('export TRAVIS_BRANCH=' + branch + '\n\n')
             buildhandler.write('export ANACONDA_USERNAME=' + anaconda_username + '\n')

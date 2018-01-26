@@ -1,7 +1,7 @@
 import getpass
 import warnings
 
-def login(service, username=None, password=None):
+def login(service, username='', password=''):
     if not username:
         username = raw_input(service + " Username: ")
         if password:

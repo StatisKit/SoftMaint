@@ -15,7 +15,8 @@ STAGES = ['install',
           'on_success',
           'on_finish']
 
-def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_upload='', anaconda_label='release'):
+def appveyor_scripts(anaconda_username='', anaconda_password='', anaconda_upload='', anaconda_label='release',
+                     conda_prefix=None, deploy=True):
     if SYSTEM == 'win':
         if os.path.exists('appveyor.yml'):
             appveyor = 'appveyor.yml'
@@ -31,16 +32,25 @@ def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_up
         with open(appveyor, 'r') as filehandler:
             appveyor = yaml.load(filehandler.read())
         if not SYSTEM in appveyor.get('os', [SYSTEM]):
-            raise IOError("Travis CI configuration file is designed for a '" + SYSTEM + "' operating system")
-        anaconda_username, anaconda_password = anaconda_login(username = anaconda_username, password = anaconda_password)
-        if any([anaconda_username, anaconda_password]):
-            while not anaconda_upload:
-                anaconda_upload = raw_input('Anaconda Cloud Upload Organization: ')
-                if not anaconda_upload:
-                    warnings.warn('Invalid Organization...', UserWarning)
+            raise IOError("AppVeyor CI configuration file is designed for a '" + SYSTEM + "' operating system")
+        if deploy:
+            anaconda_username, anaconda_password = anaconda_login(username = anaconda_username, password = anaconda_password)
+            if any([anaconda_username, anaconda_password]):
+                while not anaconda_upload:
+                    anaconda_upload = raw_input('Anaconda Cloud Upload Organization: ')
+                    if not anaconda_upload:
+                        warnings.warn('Invalid Organization...', UserWarning)
         with open('appveyor_build.bat', 'w') as buildhandler:
             buildhandler.write('echo ON\n\n')
             buildhandler.write('set CI=false\n')
+            if conda_prefix:
+                conda_prefix = os.path.expanduser(conda_prefix)
+                conda_prefix = os.path.expandvars(conda_prefix)
+                conda_prefix = os.path.abspath(conda_prefix)
+                conda_existed = os.path.exists(conda_prefix)
+                buildhandler.write('set CONDA_PREFIX=' + conda_prefix + '\n\n')
+            else:
+                conda_existed = False
             buildhandler.write('set APPVEYOR_REPO_BRANCH=' + branch + '\n\n')
             buildhandler.write('set ANACONDA_USERNAME=' + anaconda_username + '\n')
             buildhandler.write('set ANACONDA_PASSWORD=' + anaconda_password + '\n')
@@ -66,5 +76,7 @@ def appveyor_scripts(anaconda_username=None, anaconda_password=None, anaconda_up
                     buildhandler.write('  rmdir appveyor-ci /S /q\n')
                     buildhandler.write('  if errorlevel 1 exit /b 1\n')
                     buildhandler.write(')\n')
+            if deploy and not conda_existed:
+                buildhandler.write('\nrmdir ' + conda_prefix + '/S /Q\n')  
             buildhandler.write('\necho OFF\n')
             buildhandler.write('\ndel appveyor_build.bat & exit 0')

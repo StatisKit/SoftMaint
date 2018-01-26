@@ -134,38 +134,48 @@ def main_travis_ci():
                         dest='anaconda_username',
                         nargs='?',
                         help  = 'Anaconda Cloud Username',
-                        default = None)
+                        default = '')
     parser.add_argument('--anaconda-password',
                         dest='anaconda_password',
                         nargs='?',
                         help  = 'Anaconda Cloud Password',
-                        default = None)
+                        default = '')
     parser.add_argument('--anaconda-upload',
                         dest='anaconda_upload',
                         nargs='?',
                         help  = 'Anaconda Cloud Organization',
-                        default = None)
+                        default = '')
     parser.add_argument('--anaconda-label',
                         dest='anaconda_label',
                         nargs='?',
                         help  = 'Anaconda Cloud Organization\'s Label',
                         default = 'release')
+    parser.add_argument('--conda-prefix',
+                        dest='conda_prefix',
+                        help  = 'The directory in which Conda will be installed',
+                        nargs = '?',
+                        default = os.path.join(os.environ['HOME'], 'miniconda'))
+    parser.add_argument('--no-deploy',
+                        dest = 'deploy',
+                        action = 'store_false',
+                        help = "Release locally")
+    parser.set_defaults(deploy = True)
     if SYSTEM == 'linux':
         parser.add_argument('--docker-username',
                     dest='docker_username',
                     nargs='?',
                     help  = 'Docker Hub Username',
-                    default = None)
+                    default = '')
         parser.add_argument('--docker-password',
                             dest='docker_password',
                             nargs='?',
                             help  = 'Docker Hub Password',
-                            default = None)
+                            default = '')
         parser.add_argument('--docker-upload',
                             dest='docker_upload',
                             nargs='?',
                             help  = 'Docker Hub Organization',
-                            default = None)
+                            default = '')
 
     args = parser.parse_args()
 
@@ -180,6 +190,8 @@ def main_travis_ci():
                    anaconda_password=args.anaconda_password,
                    anaconda_upload=args.anaconda_upload,
                    anaconda_label=args.anaconda_label,
+                   conda_prefix=args.conda_prefix,
+                   deploy=args.deploy,
                    **kwargs)
 
     if not args.dry_run:
@@ -198,29 +210,39 @@ def main_appveyor_ci():
                         dest='anaconda_username',
                         nargs='?',
                         help  = 'Anaconda Cloud Username',
-                        default = None)
+                        default = '')
     parser.add_argument('--anaconda-password',
                         dest='anaconda_password',
                         nargs='?',
                         help  = 'Anaconda Cloud Password',
-                        default = None)
+                        default = '')
     parser.add_argument('--anaconda-upload',
                         dest='anaconda_upload',
                         nargs='?',
                         help  = 'Anaconda Cloud Organization',
-                        default = None)
+                        default = '')
     parser.add_argument('--anaconda-label',
                         dest='anaconda_label',
                         nargs='?',
                         help  = 'Anaconda Cloud Organization\'s Label',
                         default = 'release')
-
+    parser.add_argument('--conda-prefix',
+                        dest='conda_prefix',
+                        help  = 'The directory in which Conda will be installed',
+                        nargs = '?',
+                        default = os.path.join(os.environ['HOMEDRIVE'], 'miniconda'))
+    parser.add_argument('--no-deploy',
+                        dest = 'deploy',
+                        action = 'store_false',
+                        help = "Release locally")
     args = parser.parse_args()
 
     appveyor_scripts(anaconda_username=args.anaconda_username,
                      anaconda_password=args.anaconda_password,
                      anaconda_upload=args.anaconda_upload,
-                     anaconda_label=args.anaconda_label)
+                     anaconda_label=args.anaconda_label,
+                     conda_prefix=args.conda_prefix,
+                     deploy=args.deploy,)
 
 
     if not args.dry_run:

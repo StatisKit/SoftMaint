@@ -50,6 +50,7 @@ def travis_scripts(anaconda_username='', anaconda_password='', anaconda_upload='
                             warnings.warn('Invalid Organization...', UserWarning)
         with open('travis_build.sh', 'w') as buildhandler:
             buildhandler.write('set -ve\n\n')
+            buildhandler.write('export PATH=' + os.pathsep.join([path for path in os.environ['PATH'].split(os.pathsep) if not os.path.exists(os.path.join(path, 'conda'))]) + '\n\n')
             buildhandler.write('export CI=false\n')
             if conda_prefix:
                 conda_prefix = os.path.expanduser(conda_prefix)

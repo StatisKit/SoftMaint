@@ -42,6 +42,7 @@ def appveyor_scripts(anaconda_username='', anaconda_password='', anaconda_upload
                         warnings.warn('Invalid Organization...', UserWarning)
         with open('appveyor_build.bat', 'w') as buildhandler:
             buildhandler.write('echo ON\n\n')
+            buildhandler.write('export PATH=' + os.pathsep.join([path for path in os.environ['PATH'].split(os.pathsep) if not(os.path.exists(os.path.join(path, 'conda.exe')) or os.path.exists(os.path.join(path, 'conda.bat')))]) + '\n\n')
             buildhandler.write('set CI=false\n')
             if conda_prefix:
                 conda_prefix = os.path.expanduser(conda_prefix)
@@ -51,6 +52,7 @@ def appveyor_scripts(anaconda_username='', anaconda_password='', anaconda_upload
                 buildhandler.write('set CONDA_PREFIX=' + conda_prefix + '\n\n')
             else:
                 conda_existed = False
+            buildhandler.write('set APPVEYOR_BUILD_FOLDER=' + os.path.abspath('.') + '\n')
             buildhandler.write('set APPVEYOR_REPO_BRANCH=' + branch + '\n\n')
             buildhandler.write('set ANACONDA_USERNAME=' + anaconda_username + '\n')
             buildhandler.write('set ANACONDA_PASSWORD=' + anaconda_password + '\n')

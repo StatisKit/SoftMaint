@@ -1,0 +1,26 @@
+package:
+  name: python-validators
+  version: "0.12.1"
+
+source:
+  fn: validators-0.12.1.tar.gz
+  sha256: 215dffb1a57b6cc71cfe04925c01cb9ce68b93f08b569e1ea53d930624f326f9
+  url: https://github.com/kvesteri/validators/archive/0.12.1.tar.gz
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - six >=1.4.0
+    - decorator >=3.4.0
+    - python
+  run:
+    - python
+    - six >=1.4.0
+    - decorator >=3.4.0
+
+about:
+  home: https://pypi.python.org/pypi/validators/
+  license: MIT
+  summary: Python Data Validation for Humans

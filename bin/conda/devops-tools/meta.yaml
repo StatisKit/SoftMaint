@@ -21,47 +21,71 @@
 ## permissions and limitations under the License.                        ##
 
 package:
-  name: devops-tools
-  version: "1.0.0"
+    name: devops-tools
+    version: "1.0.0"
 
 source:
-  path: ../../..
+    path: ../../..
 
 build:
-  number: 0
-  entry_points:
-    - devops-notice = devops_tools.cli:main_notice
-    - devops-md5sum = devops_tools.cli:main_md5sum
-    - devops-cpu_count = devops_tools.cli:main_cpu_count
-    - devops-sublime_text = devops_tools.cli:main_sublime_text
-    - devops-travis_ci = devops_tools.cli:main_travis_ci
-    - devops-appveyor_ci = devops_tools.cli:main_appveyor_ci
-  preserve_egg_dir: False
+    number: 0
+    entry_points:
+        - devops = devops_tools.cli:main_devops
+        - notice = devops_tools.cli:main_notice
+        - cpu_count = devops_tools.cli:main_cpu_count
+        - github = devops_tools.cli:main_github
+        - travis_ci = devops_tools.cli:main_travis_ci
+        - appveyor_ci = devops_tools.cli:main_appveyor_ci
+    preserve_egg_dir: False
 
 about:
-  home: http://statiskit.readthedocs.org
-  license: Apache License 2.0
-  summary: A Tool to Ease Software Maintenance
+    home: http://statiskit.readthedocs.org
+    license: Apache License 2.0
+    summary: Tools for unifying software development and operation
 
 requirements:
-  build:
-    - python
-    - six
-  run:
-    - python
-    - six
-    - path.py
-    - pyyaml
-    - gitpython
+    build:
+        - python
+        - six
+    run:
+        - python
+        - six
+        - path.py
+        - pyyaml
+        - gitpython
+        - requests
+        - python-validators
 
-# test:
-#   source_files:
-#      - '*'
-#      - '.*'
-#   # requires:
-#   #  - python
-#   commands:
-#     - devops-notice . --check
-#    - nosetests test -x -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and linux" [linux]
-#    - nosetests test -x -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and osx"   [osx]
-#    - nosetests test -x -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and win"   [win]
+test:
+    source_files:
+        - '*'
+        - '.*'
+    requires:
+        - python-toolchain
+    commands:
+        - notice --help
+        - cpu_count --help
+        - github --help
+        - github init --help
+        - github deinit --help
+        - github fork --help
+        - github clone --help
+        - github issues --help
+        - github issue --help
+        - github hotfix --help
+        - github feature --help
+        - github start --help
+        - github end --help
+        - travis_ci --help
+        - travis_ci init --help
+        - travis_ci reset --help
+        - travis_ci build --help      [unix]
+        - travis_ci deinit --help
+        - appveyor_ci --help
+        - appveyor_ci init --help
+        - appveyor_ci reset --help
+        - appveyor_ci build --help    [win]
+        - appveyor_ci deinit --help
+        - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and linux" [linux]
+        - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and osx"   [osx]
+        - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and win"   [win]

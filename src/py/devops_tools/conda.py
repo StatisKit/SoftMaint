@@ -1,18 +1,24 @@
 import os
 
-from .login import login
+from . import credential
 
-def anaconda_login(username=None, password=None):
-    return login('Anaconda Cloud', username=username, password=password)
+def retrieve(login=None, password=None):
+    login, password = credential.retrieve('anaconda.org',
+                                          login=login,
+                                          password=password)
+    credential.__CACHE__['anaconda.org'] = dict(login = login,
+                                                password = password,
+                                                account = None)
+    return login, password
 
-def get_current_prefix():
+def current_prefix():
     return os.environ['CONDA_PREFIX']
 
-def get_default_prefix():
-    prefix = get_current_prefix()
+def default_prefix():
+    prefix = current_prefix()
     while not os.path.exists(os.path.join(os.path.dirname(prefix), 'envs')):
         prefix = os.path.dirname(prefix)
     return os.path.dirname(prefix)
 
-def get_current_environment():
+def current_environment():
     return os.environ['CONDA_DEFAULT_ENV']

@@ -49,21 +49,21 @@ SETTINGS['SConscript'] = SETTINGS['.py']
 IGNORE = {".sublime-project",
           ".json"}
 
-def get_setting(filepath):
+def setting(filepath):
     SETTING = SETTINGS.get(filepath.ext, SETTINGS.get(filepath.basename(), None))
     if SETTING is None:
         if filepath.ext not in IGNORE and filepath.basename() not in IGNORE:
             warnings.warn("No settings found for file '" + filepath + "'")
     return SETTING
 
-def find_notice(filepath):
+def find(filepath):
     if not isinstance(filepath, Path):
         filepath = Path(filepath)
     if not(filepath.exists() or filepath.isfile()):
         raise ValueError("'filepath' parameter is not a valid path to a file")
     start = 0
     end = -1
-    SETTING = get_setting(filepath)
+    SETTING = setting(filepath)
     if SETTING is not None:
         with open(filepath, 'r') as filehandler:
             pattern = re.compile('^' + SETTING['left'] + '.*' + SETTING['right'] + '$')
@@ -82,12 +82,12 @@ def find_notice(filepath):
                     line = filehandler.readline()
     return start, end
 
-def generate_notice(filepath, notice):
+def generate(filepath, notice):
     if not isinstance(filepath, Path):
         filepath = Path(filepath)
     if not(filepath.exists() or filepath.isfile()):
         raise ValueError("'filepath' parameter is not a valid path to a file")
-    SETTING = get_setting(filepath)
+    SETTING = setting(filepath)
     if SETTING is not None:
         lines = notice.splitlines()
         max_width = 0
@@ -97,29 +97,28 @@ def generate_notice(filepath, notice):
             max_width = max(max_width, len(line))
         return [SETTING["left"] + line + " " * (max_width - len(line)) + SETTING["right"] + "\n" for line in lines]
 
-def replace_notice(filepath, notice):
+def replace(filepath, notice):
     if not isinstance(filepath, Path):
         filepath = Path(filepath)
     if not(filepath.exists() or filepath.isfile()):
         raise ValueError("'filepath' parameter is not a valid path to a file")
-    SETTING = get_setting(filepath)
+    SETTING = setting(filepath)
     if SETTING is not None:
         with open(filepath, "r") as filehandler:
             lines = list(filehandler.readlines())
         if len(lines) > 0:
-            start, end = find_notice(filepath)
+            start, end = find(filepath)
             newlines = lines[:start]
             if start > 0 and lines[start - 1].strip():
                 newlines += ["\n"]
-            newlines += generate_notice(filepath, notice)
+            newlines += generate(filepath, notice)
             if end + 1 < len(lines):
                 if lines[end + 1].strip():
                     newlines += ["\n"]
                 newlines += lines[end + 1:]
         else:
-            newlines = generate_notice(filepath, notice)
+            newlines = generate(filepath, notice)
     else:
         with open(filepath, "r") as filehandler:
             newlines = filehandler.readlines()
     return "".join(newlines)
-

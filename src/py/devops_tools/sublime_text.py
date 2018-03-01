@@ -5,7 +5,7 @@ from .system import SYSTEM
 BUILD_SYSTEM="""
 {
     "working_dir": "${project_path}",
-    "target": "scons",   
+    "target": "StatisKit",   
     "file_regex": "^\\\\[Build error - file \\"(...*?)\\" at line ([0-9]*), (.*)\\\\]$",
     "linux":
     {

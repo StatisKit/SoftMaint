@@ -181,7 +181,6 @@ def _issue(repository, number):
     upstream = _fetch(github_url)
     if "parent" in upstream:
         upstream = upstream["parent"]
-    print(upstream)
     github_url = upstream["issues_url"].replace('{/number}', '/' + number)
     github_request = requests.get(github_url,
                                   auth=GITHUB_AUTH)
@@ -215,14 +214,7 @@ def issue(repository, number, browser=False):
         github_request = _issue(repository, number)
         print(github_request["title"] + " #" + number + "\n\n" + github_request["body"])
 
-def _remote_branch(repository, name):
-    repository = git.Repo(repository)
-    for branch in repository.git.branch('-r').splitlines():
-        remote, branch = branch.split('/')
-        if branch == name:
-            return remote
-
-def _branch_from_issue(repository, number, prefix, default_remote, remote=None):
+def _branch_from_issue(repository, number, prefix, default_remote, remote=None, label=None):
     repository = git.Repo(repository)
     login, password = retrieve()
     authenticate(login=login, password=password)
@@ -231,7 +223,12 @@ def _branch_from_issue(repository, number, prefix, default_remote, remote=None):
         issue = _issue(repository, number)
         try:
             repository.git.checkout('HEAD', b=prefix + '_' + str(number))
-            _remote = _remote_branch(repository, prefix + '_' + str(number))
+            _remote = None
+            for branch in repository.git.branch('-r').splitlines():
+                __remote = branch.split('/')[0]
+                if branch == prefix + '_' + str(number):
+                    _remote = __remote
+                    break
             if _remote is not None and remote is not None and not remote == _remote:
                 raise ValueError('A remote branch with the same name but a different remote already exists')
             elif remote is None:
@@ -239,7 +236,7 @@ def _branch_from_issue(repository, number, prefix, default_remote, remote=None):
                     remote = default_remote
                 else:
                     remote = _remote
-            repository.git.push("--set-upstream", repo.remote(remote).url.replace('github.com', login + ":" + password + "@github.com"), prefix + "_" + str(number))
+            repository.git.push("--set-upstream", repository.remote(remote).url.replace('github.com', login + ":" + password + "@github.com"), prefix + "_" + str(number))
             for key in issue.keys():
                 if key == "url":
                     github_url = issue.pop("url")
@@ -249,25 +246,25 @@ def _branch_from_issue(repository, number, prefix, default_remote, remote=None):
             issue["assignees"] = [assignee["login"] for assignee in issue["assignees"]]
             if not login in issue["assignees"]:
                 issue["assignees"].append(login)
+            if label and not label in issue["labels"]:
+                issue["labels"].append(label) 
             github_request = requests.patch(github_url,
                                             data=json.dumps(issue),
                                             auth=GITHUB_AUTH)
             if not github_request.ok:
                 raise ConnectionError(github_request.text)
         except Exception as e:
-            print(e)
             repository.git.checkout(prefix + "_" + str(number))
         config.__CACHE__["active_branch"] = prefix + "_" + str(number)
         config.register()
     except Exception as e:
-        print(e)
         raise Exception("Issue #" + str(number) + " not found")
 
 def hotfix(repository, number, remote=None):
-    _branch_from_issue(repository, number, prefix="hotfix", default_remote="upstream", remote=remote)
+    _branch_from_issue(repository, number, prefix="hotfix", default_remote="upstream", remote=remote, label="bug")
 
 def feature(repository, number, remote=None):
-    _branch_from_issue(repository, number, prefix="feature", default_remote="origin", remote=remote)
+    _branch_from_issue(repository, number, prefix="feature", default_remote="origin", remote=remote, label="enhancement")
 
 def start(repository, branch=None):
     repository = git.Repo(repository)
@@ -278,9 +275,31 @@ def start(repository, branch=None):
     repository.git.checkout(branch)
 
 def end(repository, suggest=False):
-    repository = git.Repo(repository)
     if suggest:
-        raise NotImplementedError("cannot yet proprose pull requests by command line")
+        login, password = retrieve()
+        authenticate(login=login, password=password)
+        upstream = _fetch(repository)
+        if "parent" in upstream:
+            upstream = upstream["parent"]
+        repository = git.Repo(repository)
+        number = int(repository.active_branch.name.replace("hotfix_", "").replace("feature_", ""))
+        if not login in repository.active_branch.tracking_branch().name.replace(login + ':' + password + '@', ''):
+            head = repository.active_branch.name
+        else:
+            head = login + ":" + repository.active_branch.name
+        github_url = upstream["url"] + "/pulls"
+        github_data = dict(issue = number,
+                           head = head,
+                           base = 'master')
+        github_request = requests.post(github_url,
+                                       auth=GITHUB_AUTH,
+                                       data=json.dumps(github_data))
+        if not github_request.ok:
+            raise ConnectionError(github_request.text)
+        else:
+            github_request = github_request.json()
+    else:
+        repository = git.Repo(repository)
     config.__CACHE__["active_branch"] = repository.active_branch.name
     config.register()
     repository.git.checkout("master")

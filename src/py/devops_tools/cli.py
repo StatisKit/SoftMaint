@@ -169,8 +169,12 @@ def main_github():
     feature_parser = subparsers.add_parser('feature', parents=[parent_parser, specific_parser])
     feature_parser.set_defaults(func = github.feature)
 
-    start_parser = subparsers.add_parser('start', parents=[parent_parser, specific_parser])
-    start_parser.set_defaults(issue = None)
+    start_parser = subparsers.add_parser('start', parents=[parent_parser])
+    start_parser.add_argument('--branch',
+                              nargs='?',
+                              dest = 'branch',
+                              default = None,
+                              help = "The branch to checkout")
     start_parser.set_defaults(func = github.start)
 
     end_parser = subparsers.add_parser('end', parents=[parent_parser])
@@ -178,7 +182,7 @@ def main_github():
                             dest = 'suggest',
                             action = 'store_true',
                             help = "Suggest repository modifications")
-    start_parser.set_defaults(suggest = False)
+    end_parser.set_defaults(suggest = False)
     end_parser.set_defaults(func = github.end)
 
 

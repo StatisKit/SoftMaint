@@ -52,6 +52,7 @@ requirements:
         - six
         - path.py
         - pyyaml
+        - git
         - gitpython
         - requests
         - python-validators
@@ -86,6 +87,6 @@ test:
         - appveyor_ci reset --help
         - appveyor_ci build --help    [win]
         - appveyor_ci deinit --help
-        - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and linux" [linux]
-        - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and osx"   [osx]
-        - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and win"   [win]
+        # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and linux" [linux]
+        # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and osx"   [osx]
+        # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and win"   [win]

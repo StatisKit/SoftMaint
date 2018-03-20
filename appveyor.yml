@@ -26,6 +26,10 @@ platform:
 
 environment:
   matrix:
+    - CONDA_RECIPE: bin\conda\python-validators
+      CONDA_VERSION: 2
+    - CONDA_RECIPE: bin\conda\python-validators
+      CONDA_VERSION: 3
     - CONDA_RECIPE: bin\conda\devops-tools
       CONDA_VERSION: 2
     - CONDA_RECIPE: bin\conda\devops-tools

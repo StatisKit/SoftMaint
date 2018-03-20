@@ -41,11 +41,10 @@ def main_devops():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--set-netrc-update',
-                        dest='netrc_update',
-                        action='store_true',
-                        help  = 'Store credentials after each command executed to register credentials used',
-                        nargs = '?',
-                        default = None)
+                        dest = 'netrc_update',
+                        action = 'store_true',
+                        help  = 'Store credentials after each command executed to register credentials used')
+    parser.set_defaults(netrc_update = None)
     args = parser.parse_args()
     config.set_netrc_update(update=args.netrc_update)
 

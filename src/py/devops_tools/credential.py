@@ -92,5 +92,5 @@ def retrieve(host, login='', password='', stdin=True):
                            account = None)
     config.load()
     if config.__CACHE__.get("netrc_update", False):
-        credential.register()
+        register()
     return login, password

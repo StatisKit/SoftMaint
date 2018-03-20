@@ -35,15 +35,18 @@ def set_active_branch(branch):
     load()
     if not active_branch is None:
         __CACHE__["active_branch"] = branch
-
+    register()
+    
 def unset_active_branch():
     global __CACHE__
     load()
     __CACHE__.pop("active_branch", None)
-    
+    register()
+
 def set_netrc_update(update=False):
     global __CACHE__
     load()
     if update is not None:
         __CACHE__["netrc_update"] = update
+    register()
 

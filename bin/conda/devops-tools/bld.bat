@@ -22,6 +22,15 @@
 
 echo ON
 
+git config --system alias.co checkout
+if errorlevel 1 exit 1
+git config --system alias.br branch
+if errorlevel 1 exit 1
+git config --system alias.ci commit
+if errorlevel 1 exit 1
+git config --system alias.st status
+if errorlevel 1 exit 1
+
 if "%PY3K%" == "1" 2to3 -n -w %SRC_DIR%\src\py\devops_tools
 
 %PYTHON% setup.py install --prefix=%PREFIX%

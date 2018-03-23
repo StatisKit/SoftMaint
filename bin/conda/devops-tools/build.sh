@@ -22,6 +22,11 @@
 
 set -ev
 
+git config --system alias.co checkout
+git config --system alias.br branch
+git config --system alias.ci commit
+git config --system alias.st status
+
 if [[ "$PY3K" = 1 ]]; then
   2to3 -n -w $SRC_DIR/src/py/devops_tools
   # 2to3 -n -w $SRC_DIR/test

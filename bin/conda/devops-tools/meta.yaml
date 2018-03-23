@@ -37,6 +37,8 @@ build:
         - travis_ci = devops_tools.cli:main_travis_ci
         - appveyor_ci = devops_tools.cli:main_appveyor_ci
     preserve_egg_dir: False
+    always_include_files:
+        - etc/gitconfig
 
 about:
     home: http://statiskit.readthedocs.org
@@ -47,6 +49,7 @@ requirements:
     build:
         - python
         - six
+        - git
     run:
         - python
         - six

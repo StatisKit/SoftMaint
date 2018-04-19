@@ -255,6 +255,7 @@ def _branch_from_issue(repository, number, prefix, default_remote, remote=None, 
                 raise ConnectionError(github_request.text)
         except Exception as e:
             repository.git.checkout(prefix + "_" + str(number))
+        config.load()
         config.__CACHE__["active_branch"] = prefix + "_" + str(number)
         config.register()
     except Exception as e:
@@ -269,6 +270,7 @@ def feature(repository, number, remote=None):
 def start(repository, branch=None):
     repository = git.Repo(repository)
     if branch is None:
+        config.load()
         branch = config.__CACHE__.get('active_branch', None)
     if branch is None:
         raise ValueError("no active branch has been found")
@@ -300,6 +302,7 @@ def end(repository, suggest=False):
             github_request = github_request.json()
     else:
         repository = git.Repo(repository)
+    config.load()
     config.__CACHE__["active_branch"] = repository.active_branch.name
     config.register()
     repository.git.checkout("master")

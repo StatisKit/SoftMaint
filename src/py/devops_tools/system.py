@@ -1,4 +1,5 @@
 import platform
+import os
 
 SYSTEMS = dict(Linux   = "linux",
                Darwin  = "osx",

@@ -36,4 +36,10 @@ if "%PY3K%" == "1" 2to3 -n -w %SRC_DIR%\src\py\devops_tools
 %PYTHON% setup.py install --prefix=%PREFIX%
 if errorlevel 1 exit 1
 
+if not exist %PREFIX%\etc\conda\activate.d mkdir %PREFIX%\etc\conda\activate.d
+copy %RECIPE_DIR%\activate.bat %PREFIX%\etc\conda\activate.d\devops_tools_vars.bat
+
+if not exist %PREFIX%\etc\conda\deactivate.d mkdir %PREFIX%\etc\conda\deactivate.d
+copy %RECIPE_DIR%\deactivate.bat %PREFIX%\etc\conda\deactivate.d\devops_tools_vars.bat
+
 echo OFF

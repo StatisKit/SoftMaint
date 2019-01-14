@@ -23,6 +23,8 @@
 from path import Path
 import argparse
 import os
+import subprocess
+import six
 
 from .walkfiles import main as walkfiles
 from .system import SYSTEM
@@ -36,6 +38,12 @@ from . import conda
 from . import github
 from . import travis
 from . import appveyor
+
+if six.PY3:
+    from subprocess import DEVNULL
+else:
+    import os
+    DEVNULL = open(os.devnull, 'wb')
 
 def main_devops():
 
@@ -367,3 +375,27 @@ def main_appveyor_ci():
     kwargs = vars(args)
     func = kwargs.pop("func")
     func(**kwargs)
+
+def main_git_describe_tag():
+    try:
+        if six.PY2:
+            print(subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].split("-")[0].strip('v'))
+        else:
+            print(subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].decode().split("-")[0].strip('v'))
+    except:
+        print("0.1.0")
+
+def main_git_describe_number():
+    try:
+        if six.PY2:
+            print(subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].split("-")[1])
+        else:
+            print(subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].decode().split("-")[1])
+    except:
+        try:
+            if six.PY2:
+                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count'], stderr=DEVNULL).splitlines()[0])
+            else:
+                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count'], stderr=DEVNULL).splitlines()[0].decode())
+        except:
+            print("0")

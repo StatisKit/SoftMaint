@@ -22,13 +22,13 @@
 
 package:
     name: devops-tools
-    version: "1.0.0"
+    version: {{ GIT_DESCRIBE_TAG }}
 
 source:
     path: ../../..
 
 build:
-    number: 0
+    number: {{ GIT_DESCRIBE_NUMBER }}
     entry_points:
         - devops = devops_tools.cli:main_devops
         - notice = devops_tools.cli:main_notice
@@ -36,6 +36,8 @@ build:
         - github = devops_tools.cli:main_github
         - travis_ci = devops_tools.cli:main_travis_ci
         - appveyor_ci = devops_tools.cli:main_appveyor_ci
+        - git_describe_tag = devops_tools.cli:main_git_describe_tag
+        - git_describe_number = devops_tools.cli:main_git_describe_number
     preserve_egg_dir: False
     always_include_files:
         - etc/gitconfig
@@ -83,13 +85,9 @@ test:
         - travis_ci --help
         - travis_ci init --help
         - travis_ci reset --help
-        - travis_ci build --help      [unix]
         - travis_ci deinit --help
-        - appveyor_ci --help
-        - appveyor_ci init --help
-        - appveyor_ci reset --help
-        - appveyor_ci build --help    [win]
-        - appveyor_ci deinit --help
+        - git_describe_tag
+        - git_describe_number
         # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and linux" [linux]
         # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and osx"   [osx]
         # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and win"   [win]

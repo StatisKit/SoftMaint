@@ -1,0 +1,2 @@
+set GIT_DESCRIBE_TAG=git_describe_tag
+set GIT_DESCRIBE_NUMBER=git_describe_number

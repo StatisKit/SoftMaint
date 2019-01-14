@@ -8,7 +8,7 @@ source:
   url: https://github.com/kvesteri/validators/archive/0.12.1.tar.gz
 
 build:
-  number: 0
+  number: {{ GIT_DESCRIBE_NUMBER }}
 
 requirements:
   build:

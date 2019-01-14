@@ -34,4 +34,11 @@ fi
 
 $PYTHON setup.py install --prefix=$PREFIX
 
+mkdir -p $PREFIX/etc/conda/activate.d
+cp $RECIPE_DIR/activate.sh $PREFIX/etc/conda/activate.d/devops_tools_vars.sh
+
+mkdir -p $PREFIX/etc/conda/deactivate.d
+cp $RECIPE_DIR/deactivate.sh $PREFIX/etc/conda/deactivate.d/devops_tools_vars.sh
+
+
 set +ev

@@ -1,0 +1,2 @@
+export GIT_DESCRIBE_TAG=git_describe_tag
+export GIT_DESCRIBE_NUMBER=git_describe_number

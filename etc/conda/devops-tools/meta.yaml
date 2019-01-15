@@ -22,7 +22,7 @@
 
 package:
     name: devops-tools
-    version: {{ GIT_DESCRIBE_TAG }}
+    version: {{ GIT_DESCRIBE_VERSION }}
 
 source:
     path: ../../..
@@ -36,8 +36,11 @@ build:
         - github = devops_tools.cli:main_github
         - travis_ci = devops_tools.cli:main_travis_ci
         - appveyor_ci = devops_tools.cli:main_appveyor_ci
-        - git_describe_tag = devops_tools.cli:main_git_describe_tag
+        - git_describe_version = devops_tools.cli:main_git_describe_version
         - git_describe_number = devops_tools.cli:main_git_describe_number
+        - datetime_describe_version = devops_tools.cli:main_git_describe_version
+        - git_describe_number = devops_tools.cli:main_git_describe_number
+
     preserve_egg_dir: False
     always_include_files:
         - etc/gitconfig

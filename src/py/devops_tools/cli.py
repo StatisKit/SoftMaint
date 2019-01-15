@@ -25,6 +25,7 @@ import argparse
 import os
 import subprocess
 import six
+import datetime
 
 from .walkfiles import main as walkfiles
 from .system import SYSTEM
@@ -376,7 +377,7 @@ def main_appveyor_ci():
     func = kwargs.pop("func")
     func(**kwargs)
 
-def main_git_describe_tag():
+def main_git_describe_version():
     try:
         if six.PY2:
             print(subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].split("-")[0].strip('v'))
@@ -399,3 +400,14 @@ def main_git_describe_number():
                 print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count'], stderr=DEVNULL).splitlines()[0].decode())
         except:
             print("0")
+
+def main_datetime_describe_version():
+    now = datetime.datetime.now()
+    print(str(now.year % 2000) + "." + str(now.month).rjust(2, '0')  + "." + str(now.day).rjust(2, '0'))
+
+def main_datetime_describe_number():
+    if 'TRAVIS_BUILD_NUMBER':
+        print(os.environ['TRAVIS_BUILD_NUMBER'])
+    else:
+        now = datetime.datetime.now()
+        print(now.hour)

@@ -1,2 +1,5 @@
-set GIT_DESCRIBE_TAG=git_describe_tag
+set GIT_DESCRIBE_VERSION=git_describe_version
 set GIT_DESCRIBE_NUMBER=git_describe_number
+
+set DATETIME_DESCRIBE_VERSION=datetime_describe_version
+set DATETIME_DESCRIBE_NUMBER=datetime_describe_number

@@ -406,8 +406,8 @@ def main_datetime_describe_version():
     print(str(now.year % 2000) + "." + str(now.month).rjust(2, '0')  + "." + str(now.day).rjust(2, '0'))
 
 def main_datetime_describe_number():
-    if 'TRAVIS_BUILD_NUMBER':
+    if 'TRAVIS_BUILD_NUMBER' in os.environ:
         print(os.environ['TRAVIS_BUILD_NUMBER'])
     else:
         now = datetime.datetime.now()
-        print(now.hour)
+        print(str(now.hour).rjust(2, '0'))

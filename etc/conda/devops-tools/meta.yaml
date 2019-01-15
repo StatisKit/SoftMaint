@@ -89,8 +89,10 @@ test:
         - travis_ci init --help
         - travis_ci reset --help
         - travis_ci deinit --help
-        - git_describe_tag
+        - git_describe_version
         - git_describe_number
-        # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and linux" [linux]
-        # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and osx"   [osx]
-        # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and win"   [win]
+        - datetime_describe_version
+        - datetime_describe_number
+        - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and linux" [linux]
+        - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and osx"   [osx]
+        - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and win"   [win]

@@ -3,3 +3,5 @@ unset GIT_DESCRIBE_NUMBER
 
 unset DATETIME_DESCRIBE_VERSION
 unset DATETIME_DESCRIBE_NUMBER
+
+function cd() { builtin cd "$@"; }

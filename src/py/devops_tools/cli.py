@@ -43,7 +43,6 @@ from . import appveyor
 if six.PY3:
     from subprocess import DEVNULL
 else:
-    import os
     DEVNULL = open(os.devnull, 'wb')
 
 def main_devops():
@@ -389,15 +388,21 @@ def main_git_describe_version():
 def main_git_describe_number():
     try:
         if six.PY2:
-            print(subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].split("-")[1])
+            output = subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].split('-')
         else:
-            print(subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].decode().split("-")[1])
+            output = subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].decode().split('-')
+        if len(output) == 4:
+            print(output[2])
+        elif len(output) == 3:
+            print(output[1]) 
+        else:
+            raise ValueError()
     except:
         try:
             if six.PY2:
-                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count'], stderr=DEVNULL).splitlines()[0])
+                print(subprocess.check_output(['git', '-C', '..', 'rev-list', 'HEAD', '--count']).splitlines()[0])
             else:
-                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count'], stderr=DEVNULL).splitlines()[0].decode())
+                print(subprocess.check_output(['git', '-C', '..', 'rev-list', 'HEAD', '--count']).splitlines()[0].decode())
         except:
             print("0")
 

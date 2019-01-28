@@ -400,9 +400,9 @@ def main_git_describe_number():
     except:
         try:
             if six.PY2:
-                print(subprocess.check_output(['git', '-C', '..', 'rev-list', 'HEAD', '--count']).splitlines()[0])
+                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count']).splitlines()[0])
             else:
-                print(subprocess.check_output(['git', '-C', '..', 'rev-list', 'HEAD', '--count']).splitlines()[0].decode())
+                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count']).splitlines()[0].decode())
         except:
             print("0")
 

@@ -415,4 +415,10 @@ def main_datetime_describe_number():
         print(os.environ['TRAVIS_BUILD_NUMBER'])
     else:
         now = datetime.datetime.now()
-        print(str(now.hour).rjust(2, '0'))
+        try:
+            if PY2:
+                print(subprocess.check_output(['git', '-C', '..', 'rev-list', 'HEAD', '--count', '--after="' + str(now.year) + '/' + str(now.month).rjust(2, '0') + '/' + str(now.day).rjust(2, '0') + ' 00:00:00"']).splitlines()[0])
+            else:
+                print(subprocess.check_output(['git', '-C', '..', 'rev-list', 'HEAD', '--count', '--after="' + str(now.year) + '/' + str(now.month).rjust(2, '0') + '/' + str(now.day).rjust(2, '0') + ' 00:00:00"']).splitlines()[0].decode())
+        except:
+            print(str(now.hour).rjust(2, '0'))

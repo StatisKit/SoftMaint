@@ -43,7 +43,6 @@ from . import appveyor
 if six.PY3:
     from subprocess import DEVNULL
 else:
-    import os
     DEVNULL = open(os.devnull, 'wb')
 
 def main_devops():
@@ -389,9 +388,9 @@ def main_git_describe_version():
 def main_git_describe_number():
     try:
         if six.PY2:
-            output = subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0]
+            output = subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].split('-')
         else:
-            output = subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].decode()
+            output = subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].decode().split('-')
         if len(output) == 4:
             print(output[2])
         elif len(output) == 3:
@@ -401,9 +400,9 @@ def main_git_describe_number():
     except:
         try:
             if six.PY2:
-                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count'], stderr=DEVNULL).splitlines()[0])
+                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count']).splitlines()[0])
             else:
-                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count'], stderr=DEVNULL).splitlines()[0].decode())
+                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count']).splitlines()[0].decode())
         except:
             print("0")
 
@@ -417,6 +416,3 @@ def main_datetime_describe_number():
     else:
         now = datetime.datetime.now()
         print(str(now.hour).rjust(2, '0'))
-
-# def main_conda_build_config():
-#     subprocess.check_call(['curl', 'https://raw.githubusercontent.com/StatisKit/travis-ci/master/conda_build_config.yaml', '-o', os.path.join(os.environ['CONDA_PREFIX', '..', '..', 'conda-bld']), os.environ])

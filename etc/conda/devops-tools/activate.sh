@@ -1,7 +1,4 @@
-function cd() {
-    
-    builtin cd "$@"
-
+function conda_build_env {
     export GIT_DESCRIBE_VERSION=`git_describe_version`
     export GIT_DESCRIBE_NUMBER=`git_describe_number`
 

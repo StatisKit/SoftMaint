@@ -286,7 +286,7 @@ def main_travis_ci():
                         dest='anaconda_label',
                         nargs='?',
                         help  = 'Anaconda Cloud account\'s label to set when uploading',
-                        default = 'release')
+                        default = 'main')
     deploy_parser.add_argument('--docker-owner',
                                dest='docker_owner',
                                nargs='?',
@@ -417,3 +417,6 @@ def main_datetime_describe_number():
     else:
         now = datetime.datetime.now()
         print(str(now.hour).rjust(2, '0'))
+
+# def main_conda_build_config():
+#     subprocess.check_call(['curl', 'https://raw.githubusercontent.com/StatisKit/travis-ci/master/conda_build_config.yaml', '-o', os.path.join(os.environ['CONDA_PREFIX', '..', '..', 'conda-bld']), os.environ])

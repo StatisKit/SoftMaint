@@ -285,7 +285,7 @@ def main_travis_ci():
                         dest='anaconda_label',
                         nargs='?',
                         help  = 'Anaconda Cloud account\'s label to set when uploading',
-                        default = 'release')
+                        default = 'main')
     deploy_parser.add_argument('--docker-owner',
                                dest='docker_owner',
                                nargs='?',

@@ -2,6 +2,7 @@ import os
 
 from . import credential
 
+
 def retrieve(login=None, password=None):
     login, password = credential.retrieve('anaconda.org',
                                           login=login,

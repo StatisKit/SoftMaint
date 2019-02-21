@@ -27,9 +27,6 @@ import subprocess
 import six
 import datetime
 
-from .walkfiles import main as walkfiles
-from .system import SYSTEM
-
 from . import config
 from . import credential
 from . import notice
@@ -39,6 +36,10 @@ from . import conda
 from . import github
 from . import travis
 from . import appveyor
+from . import anaconda_cloud
+
+from .walkfiles import main as walkfiles
+from .system import SYSTEM
 
 if six.PY3:
     from subprocess import DEVNULL
@@ -422,3 +423,48 @@ def main_datetime_describe_number():
                 print(subprocess.check_output(['git', '-C', '..', 'rev-list', 'HEAD', '--count', '--after="' + str(now.year) + '/' + str(now.month).rjust(2, '0') + '/' + str(now.day).rjust(2, '0') + ' 00:00:00"']).splitlines()[0].decode())
         except:
             print(str(now.hour).rjust(2, '0'))
+
+def main_anaconda_cloud():
+
+    parser = argparse.ArgumentParser()
+
+    subparsers = parser.add_subparsers(title='subcommands',
+                                       help='additional help')
+
+    parent_parser = argparse.ArgumentParser(add_help=False)
+    parent_parser.add_argument('--anaconda-owner',
+                                nargs='?',
+                                default=None,
+                                dest = 'anaconda_owner',
+                                help  = 'The Anaconda Cloud Organization or User to consider')
+
+    child_parser = argparse.ArgumentParser(add_help=False)
+    child_parser.add_argument('--anaconda-label',
+                                 nargs='?',
+                                 default='main',
+                                 dest = 'anaconda_label',
+                                 help = "The Anaconda Cloud label to consider")
+    child_parser.add_argument('--no-force',
+                              default=True,
+                              action='store_false',
+                              dest = 'force',
+                              help = "Force download/upload")
+
+    download_parser = subparsers.add_parser('download', parents=[parent_parser, child_parser])
+    download_parser.set_defaults(func = anaconda_cloud.download)    
+
+    upload_parser = subparsers.add_parser('upload', parents=[parent_parser, child_parser])
+    upload_parser.set_defaults(func = anaconda_cloud.upload)    
+
+    clean_parser = subparsers.add_parser('clean', parents=[parent_parser])
+    clean_parser.add_argument('--anaconda-label',
+                                 nargs='?',
+                                 default=None,
+                                 dest = 'anaconda_label',
+                                 help = "The Anaconda Cloud label to consider")
+    clean_parser.set_defaults(func = anaconda_cloud.clean)  
+
+    args = parser.parse_args()
+    kwargs = vars(args)
+    func = kwargs.pop("func")
+    func(**kwargs)

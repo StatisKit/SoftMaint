@@ -143,8 +143,9 @@ def deinit(name, owner=None):
     if not github_request.ok:
         raise ConnectionError(github_request.text)
 
-def issues(repository, browser=False, assigned=False):
-    repository = git.Repo(repository)
+def issues(repository=None, browser=False, assigned=False):
+    if repository:
+        repository = git.Repo(repository)
     login, password = retrieve()
     if browser:
         try:
@@ -157,24 +158,45 @@ def issues(repository, browser=False, assigned=False):
         webbrowser.open(github_url)
     else:
         authenticate(login=login, password=password)
-        github_url = repository.remote().url
-        upstream = _fetch(github_url)
-        if "parent" in upstream:
-            upstream = upstream["parent"]
-        github_url = upstream["issues_url"].replace('{/number}', '')
-        github_request = requests.get(github_url,
-                                      auth=GITHUB_AUTH)
-        if not github_request.ok:
-            raise ConnectionError(github_request.text)
+        if repository:
+            github_url = repository.remote().url
+            upstream = _fetch(github_url)
+            if "parent" in upstream:
+                upstream = upstream["parent"]
+            github_url = upstream["issues_url"].replace('{/number}', '')
+            github_request = requests.get(github_url,
+                                          auth=GITHUB_AUTH)
+            if not github_request.ok:
+                raise ConnectionError(github_request.text)
+            else:
+                github_request = github_request.json()
+            length = 0
+            for issue in github_request:
+                if not assigned or any(assignee["login"] == login for assignee in issue["assignees"]):
+                    length = max(len(str(issue["number"])), length)
+            for issue in github_request:
+                if not assigned or any(assignee["login"] == login for assignee in issue["assignees"]):
+                    print("#" + str(issue["number"]).zfill(length) + ": " + issue["title"])
         else:
-            github_request = github_request.json()
-        length = 0
-        for issue in github_request:
-            if not assigned or any(assignee["login"] == login for assignee in issue["assignees"]):
+            github_url = 'https://api.github.com/user/issues'
+            github_request = requests.get(github_url,
+                                          auth=GITHUB_AUTH)
+            if not github_request.ok:
+                raise ConnectionError(github_request.text)
+            else:
+                github_request = github_request.json()
+            length = 0
+            for issue in github_request:
+                if issue['state'] == "ppen":
+                    
+                    
+                    issue['url']
+                    title = "[" + issue['repository_url'].replace("https://api.github.com/repos/", "").replace("/", "::") + "#" + str(issue["number"]) "] " + issue['title']
+                    body = issue['body']
                 length = max(len(str(issue["number"])), length)
-        for issue in github_request:
-            if not assigned or any(assignee["login"] == login for assignee in issue["assignees"]):
-                print("#" + str(issue["number"]).zfill(length) + ": " + issue["title"])
+            for issue in github_request:
+                if not assigned or any(assignee["login"] == login for assignee in issue["assignees"]):
+                    print("#" + str(issue["number"]).zfill(length) + ": " + issue["title"])
 
 def _issue(repository, number):
     github_url = repository.remote().url

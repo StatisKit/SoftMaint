@@ -401,7 +401,7 @@ def main_datetime_describe_version():
     args = parser.parse_args()
     describe.datetime_describe_version(repository=args.repository)
 
-def main_datetime_describe_number(repository):
+def main_datetime_describe_number():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--repository',
@@ -410,7 +410,7 @@ def main_datetime_describe_number(repository):
                         help  = 'The repository to describe')
     args = parser.parse_args()
     describe.datetime_describe_number(repository=args.repository)
-    
+
 
 def main_anaconda_cloud():
 

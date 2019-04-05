@@ -191,7 +191,7 @@ def issues(repository=None, browser=False, assigned=False):
                     
                     
                     issue['url']
-                    title = "[" + issue['repository_url'].replace("https://api.github.com/repos/", "").replace("/", "::") + "#" + str(issue["number"]) "] " + issue['title']
+                    title = "[" + issue['repository_url'].replace("https://api.github.com/repos/", "").replace("/", "::") + "#" + str(issue["number"]) + "] " + issue['title']
                     body = issue['body']
                 length = max(len(str(issue["number"])), length)
             for issue in github_request:

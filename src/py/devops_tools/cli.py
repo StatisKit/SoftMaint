@@ -379,7 +379,7 @@ def main_git_describe_version():
                         default = '.',
                         help  = 'The repository to describe')
     args = parser.parse_args()
-    describe.git_describe_version(repository=args.repository)
+    print(describe.git_describe_version(repository=args.repository))
 
 def main_git_describe_number():
 
@@ -389,7 +389,7 @@ def main_git_describe_number():
                         default = '.',
                         help  = 'The repository to describe')
     args = parser.parse_args()
-    describe.git_describe_number(repository=args.repository)
+    print(describe.git_describe_number(repository=args.repository))
 
 def main_datetime_describe_version():
 
@@ -399,7 +399,7 @@ def main_datetime_describe_version():
                         default = '.',
                         help  = 'The repository to describe')
     args = parser.parse_args()
-    describe.datetime_describe_version(repository=args.repository)
+    print(describe.datetime_describe_version(repository=args.repository))
 
 def main_datetime_describe_number():
 
@@ -409,7 +409,7 @@ def main_datetime_describe_number():
                         default = '.',
                         help  = 'The repository to describe')
     args = parser.parse_args()
-    describe.datetime_describe_number(repository=args.repository)
+    print(describe.datetime_describe_number(repository=args.repository))
 
 
 def main_anaconda_cloud():

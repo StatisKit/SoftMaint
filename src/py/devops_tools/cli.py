@@ -20,31 +20,25 @@
 ## mplied. See the License for the specific language governing           ##
 ## permissions and limitations under the License.                        ##
 
-from path import Path
-import argparse
-import os
-import subprocess
-import six
-import datetime
-
-from . import config
-from . import credential
-from . import notice
-from . import cpu_count
-from . import sublime_text
-from . import conda
-from . import github
-from . import travis
-from . import appveyor
-from . import anaconda_cloud
-
 from .walkfiles import main as walkfiles
 from .system import SYSTEM
 
-if six.PY3:
-    from subprocess import DEVNULL
-else:
-    DEVNULL = open(os.devnull, 'wb')
+from . import anaconda_cloud
+from . import appveyor
+from . import cpu_count
+from . import conda
+from . import config
+from . import credential
+from . import describe
+from . import github
+from . import notice
+from . import sublime_text
+from . import travis
+
+from path import Path
+
+import argparse
+import os
 
 def main_devops():
 
@@ -378,51 +372,45 @@ def main_appveyor_ci():
     func(**kwargs)
 
 def main_git_describe_version():
-    try:
-        if six.PY2:
-            print(subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].split("-")[0].strip('v'))
-        else:
-            print(subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].decode().split("-")[0].strip('v'))
-    except:
-        print("0.1.0")
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--repository',
+                        dest = 'repository',
+                        default = '.',
+                        help  = 'The repository to describe')
+    args = parser.parse_args()
+    describe.git_describe_version(repository=args.repository)
 
 def main_git_describe_number():
-    try:
-        if six.PY2:
-            output = subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].split('-')
-        else:
-            output = subprocess.check_output(['git', 'describe', '--tags'], stderr=DEVNULL).splitlines()[0].decode().split('-')
-        if len(output) == 4:
-            print(output[2])
-        elif len(output) == 3:
-            print(output[1]) 
-        else:
-            raise ValueError()
-    except:
-        try:
-            if six.PY2:
-                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count']).splitlines()[0])
-            else:
-                print(subprocess.check_output(['git', 'rev-list', 'HEAD', '--count']).splitlines()[0].decode())
-        except:
-            print("0")
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--repository',
+                        dest = 'repository',
+                        default = '.',
+                        help  = 'The repository to describe')
+    args = parser.parse_args()
+    describe.git_describe_number(repository=args.repository)
 
 def main_datetime_describe_version():
-    now = datetime.datetime.now()
-    print(str(now.year % 2000) + "." + str(now.month).rjust(2, '0')  + "." + str(now.day).rjust(2, '0'))
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--repository',
+                        dest = 'repository',
+                        default = '.',
+                        help  = 'The repository to describe')
+    args = parser.parse_args()
+    describe.datetime_describe_version(repository=args.repository)
 
 def main_datetime_describe_number():
-    if 'TRAVIS_BUILD_NUMBER' in os.environ:
-        print(os.environ['TRAVIS_BUILD_NUMBER'])
-    else:
-        now = datetime.datetime.now()
-        try:
-            if PY2:
-                print(subprocess.check_output(['git', '-C', '..', 'rev-list', 'HEAD', '--count', '--after="' + str(now.year) + '/' + str(now.month).rjust(2, '0') + '/' + str(now.day).rjust(2, '0') + ' 00:00:00"']).splitlines()[0])
-            else:
-                print(subprocess.check_output(['git', '-C', '..', 'rev-list', 'HEAD', '--count', '--after="' + str(now.year) + '/' + str(now.month).rjust(2, '0') + '/' + str(now.day).rjust(2, '0') + ' 00:00:00"']).splitlines()[0].decode())
-        except:
-            print(str(now.hour).rjust(2, '0'))
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--repository',
+                        dest = 'repository',
+                        default = '.',
+                        help  = 'The repository to describe')
+    args = parser.parse_args()
+    describe.datetime_describe_number(repository=args.repository)
+
 
 def main_anaconda_cloud():
 

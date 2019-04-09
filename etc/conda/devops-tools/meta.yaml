@@ -41,7 +41,6 @@ build:
         - datetime_describe_version = devops_tools.cli:main_datetime_describe_version
         - datetime_describe_number = devops_tools.cli:main_datetime_describe_number
         - anaconda_cloud = devops_tools.cli:main_anaconda_cloud
-
     preserve_egg_dir: False
     always_include_files:
         - etc/gitconfig

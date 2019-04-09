@@ -9,12 +9,12 @@ BUILD_SYSTEM="""
     "file_regex": "^\\\\[Build error - file \\"(...*?)\\" at line ([0-9]*), (.*)\\\\]$",
     "linux":
     {
-        "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons autowig -j$CPU_COUNT --diagnostics-color=never && scons -j$CPU_COUNT --diagnostics-color=never --with-nose-debug=none'",
+        "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons autowig -j\\${CPU_COUNT} --diagnostics-color=never && scons -j\\${CPU_COUNT} --diagnostics-color=never --with-nose-debug=none'",
         "shell": true
     },
     "osx":
     {
-        "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons autowig -j$CPU_COUNT && scons -j$CPU_COUNT --with-nose-debug=none'",
+        "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons autowig -j\\${CPU_COUNT} && scons -j\\${CPU_COUNT} --with-nose-debug=none'",
         "shell": true
     },
     "windows":

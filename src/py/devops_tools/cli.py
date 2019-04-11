@@ -32,7 +32,6 @@ from . import credential
 from . import describe
 from . import github
 from . import notice
-from . import sublime_text
 from . import travis
 
 from path import Path

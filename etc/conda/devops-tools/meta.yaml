@@ -41,8 +41,6 @@ build:
         - datetime_describe_version = devops_tools.cli:main_datetime_describe_version
         - datetime_describe_number = devops_tools.cli:main_datetime_describe_number
         - anaconda_cloud = devops_tools.cli:main_anaconda_cloud
-
-    preserve_egg_dir: False
     always_include_files:
         - etc/gitconfig
 
@@ -99,6 +97,8 @@ test:
         - anaconda_cloud download --help
         - anaconda_cloud upload --help
         - anaconda_cloud clean --help
+        - build_system --help
+        - build_system sublime_text --help
         # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and linux" [linux]
         # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and osx"   [osx]
         # - nosetests test -s -v -A "level <= {{ environ.get('TEST_LEVEL', 1) }} and win"   [win]

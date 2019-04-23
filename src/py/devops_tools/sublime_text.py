@@ -4,22 +4,22 @@ from .system import SYSTEM
 
 BUILD_SYSTEM="""
 {
-    "working_dir": "${project_path}",
+    "working_dir": "${folder}",
     "target": "StatisKit",   
     "file_regex": "^\\\\[Build error - file \\"(...*?)\\" at line ([0-9]*), (.*)\\\\]$",
     "linux":
     {
-        "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons autowig -j$CPU_COUNT --diagnostics-color=never && scons -j$CPU_COUNT --diagnostics-color=never --with-nose-debug=none'",
+        "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons autowig -j{{ CPU_COUNT }} --diagnostics-color=never && scons -j{{ CPU_COUNT }} --diagnostics-color=never --with-nose-debug=none'",
         "shell": true
     },
     "osx":
     {
-        "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons autowig -j$CPU_COUNT && scons -j$CPU_COUNT --with-nose-debug=none'",
+        "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons autowig -j{{ CPU_COUNT }} && scons -j{{ CPU_COUNT }} --with-nose-debug=none'",
         "shell": true
     },
     "windows":
     {
-        "cmd": "call {{ prefix }}\\\\Scripts\\\\activate.bat {{ environment }} && scons autowig -j%CPU_COUNT% & scons -j%CPU_COUNT% --with-nose-debug=none",
+        "cmd": "call {{ PREFIX }}\\\\Scripts\\\\activate.bat {{ ENVIRONMENT }} && scons autowig -j{{ CPU_COUNT }} & scons -j{{ CPU_COUNT }} --with-nose-debug=none",
         "shell": true
     },
     "variants":
@@ -28,17 +28,17 @@ BUILD_SYSTEM="""
             "name": "C++",
             "linux":
             {
-                "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons cpp -j$CPU_COUNT --diagnostics-color=never'",
+                "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons cpp -j$CPU_COUNT --diagnostics-color=never'",
                 "shell": true
             },
             "osx":
             {
-                "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons cpp -j$CPU_COUNT'",
+                "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons cpp -j$CPU_COUNT'",
                 "shell": true
             },
             "windows":
             {
-                "cmd": "call {{ prefix }}\\\\Scripts\\\\activate.bat {{ environment }} & scons cpp -j%CPU_COUNT%",
+                "cmd": "call {{ PREFIX }}\\\\Scripts\\\\activate.bat {{ ENVIRONMENT }} & scons cpp -j{{ CPU_COUNT }}",
                 "shell": true
             },
         },
@@ -46,17 +46,17 @@ BUILD_SYSTEM="""
             "name": "Python",
             "linux":
             {
-                "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons py -j$CPU_COUNT --diagnostics-color=never'",
+                "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons py -j$CPU_COUNT --diagnostics-color=never'",
                 "shell": true
             },
             "osx":
             {
-                "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons py -j$CPU_COUNT'",
+                "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons py -j$CPU_COUNT'",
                 "shell": true
             },
             "windows":
             {
-                "cmd": "call {{ prefix }}\\\\Scripts\\\\activate.bat {{ environment }} & scons py -j%CPU_COUNT%",
+                "cmd": "call {{ PREFIX }}\\\\Scripts\\\\activate.bat {{ ENVIRONMENT }} & scons py -j{{ CPU_COUNT }}",
                 "shell": true
             },
         },
@@ -64,17 +64,17 @@ BUILD_SYSTEM="""
             "name": "Test",
             "linux":
             {
-                "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons test -j$CPU_COUNT --diagnostics-color=never --with-nose-debug=none'",
+                "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons test -j$CPU_COUNT --diagnostics-color=never --with-nose-debug=none'",
                 "shell": true
             },
             "osx":
             {
-                "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons test -j$CPU_COUNT --with-nose-debug=none'",
+                "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons test -j$CPU_COUNT --with-nose-debug=none'",
                 "shell": true
             },
             "windows":
             {
-                "cmd": "call {{ prefix }}\\\\Scripts\\\\activate.bat {{ environment }} & scons test -j%CPU_COUNT% --with-nose-debug=none",
+                "cmd": "call {{ PREFIX }}\\\\Scripts\\\\activate.bat {{ ENVIRONMENT }} & scons test -j{{ CPU_COUNT }} --with-nose-debug=none",
                 "shell": true
             },
         },
@@ -82,17 +82,17 @@ BUILD_SYSTEM="""
             "name": "AutoWIG",
             "linux":
             {
-                "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons autowig -j$CPU_COUNT --diagnostics-color=never'",
+                "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons autowig -j$CPU_COUNT --diagnostics-color=never'",
                 "shell": true
             },
             "osx":
             {
-                "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons autowig -j$CPU_COUNT",
+                "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons autowig -j$CPU_COUNT",
                 "shell": true
             },
             "windows":
             {
-                "cmd": "call {{ prefix }}\\\\Scripts\\\\activate.bat {{ environment }} & scons autowig -j%CPU_COUNT%",
+                "cmd": "call {{ PREFIX }}\\\\Scripts\\\\activate.bat {{ ENVIRONMENT }} & scons autowig -j{{ CPU_COUNT }}",
                 "shell": true
             },
         },
@@ -100,17 +100,17 @@ BUILD_SYSTEM="""
             "name": "Clean",
             "linux":
             {
-                "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons autowig -c; scons -c'",
+                "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons autowig -c; scons -c'",
                 "shell": true
             },
             "osx":
             {
-                "cmd": "bash -c 'source {{ prefix }}/bin/activate {{ environment }} && scons autowig -c; scons -c'",
+                "cmd": "bash -c 'source {{ PREFIX }}/bin/activate {{ ENVIRONMENT }} && scons autowig -c; scons -c'",
                 "shell": true
             },
             "windows":
             {
-                "cmd": "call {{ prefix }}\\\\Scripts\\\\activate.bat {{ environment }} & scons autowig -c & scons -c",
+                "cmd": "call {{ PREFIX }}\\\\Scripts\\\\activate.bat {{ ENVIRONMENT }} & scons autowig -c & scons -c",
                 "shell": true
             },   
         }
@@ -630,3 +630,14 @@ def config_paths(*versions):
         if os.path.exists(config + str(version)):
             configs.append(config + str(version))
     return configs
+
+def build_system(prefix, environment, cpu_count):
+    for config_path in config_paths():
+        with open(os.path.join(config_path, 'StatisKit.build_system'), 'w') as filehandler:
+            CONTENT = BUILD_SYSTEM
+            CONTENT = CONTENT.replace("{{ PREFIX }}", prefix)
+            CONTENT = CONTENT.replace("{{ ENVIRONMENT }}", environment)
+            CONTENT = CONTENT.replace("{{ CPU_COUNT }}", str(cpu_count))
+            filehandler.write(CONTENT)
+        with open(os.path.join(config_path, 'StatisKit.py'), 'w') as filehandler:
+            filehandler.write(BUILD_TARGET)
